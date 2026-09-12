@@ -88,22 +88,6 @@
       </div>
     </header>
 
-    <!-- Active Price Drop Alerts Bar -->
-    <div id="activeAlertsBanner" class="hidden glass-card rounded-2xl p-4 border border-amber-500/40 bg-amber-500/10 shadow-xl">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🔔</span>
-          <div>
-            <h4 class="text-xs font-black uppercase tracking-wider text-amber-400">Active Price Drop Tracker</h4>
-            <p id="alertSummaryText" class="text-xs text-zinc-200 font-medium">Monitoring AirPods Pro (2nd Gen) | Target: ₹18,000 | Current Lowest: ₹19,490 on Flipkart</p>
-          </div>
-        </div>
-        <span class="text-[10px] bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-amber-500/30 animate-pulse">
-          Monitoring 24/7
-        </span>
-      </div>
-    </div>
-
     <!-- Dual Input Search & Target Price Bar -->
     <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden border border-amber-500/20">
       
@@ -162,14 +146,14 @@
       
       <!-- Section 1: Electronics & Tech Shopping -->
       <section class="space-y-5">
-        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+        <div class="flex justify-between items-end border-b border-zinc-800/80 pb-4">
           <div>
-            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-violet-400 uppercase tracking-widest mb-1">
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 uppercase tracking-widest mb-1">
               <span>🛒 Tech & Official Retail Stores</span>
             </div>
             <h2 class="text-3xl font-black text-white">Extracted Smartphone & Gadget Deals</h2>
           </div>
-          <span class="text-xs text-slate-400 font-medium hidden sm:inline">Amazon • Flipkart • Croma</span>
+          <span class="text-xs text-zinc-400 font-medium hidden sm:inline">Amazon • Flipkart • Croma</span>
         </div>
 
         <div id="shoppingGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -179,14 +163,14 @@
 
       <!-- Section 2: Hotels & Accommodations -->
       <section class="space-y-5">
-        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+        <div class="flex justify-between items-end border-b border-zinc-800/80 pb-4">
           <div>
-            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-cyan-400 uppercase tracking-widest mb-1">
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-red-500 uppercase tracking-widest mb-1">
               <span>🏨 Stays & Accommodations</span>
             </div>
-            <h2 class="text-3xl font-black text-white">Top Verified Hotels in <span id="hotelCityName" class="text-cyan-400 glow-text">Mumbai</span></h2>
+            <h2 class="text-3xl font-black text-white">Top Verified Hotels in <span id="hotelCityName" class="text-amber-400">Mumbai</span></h2>
           </div>
-          <span class="text-xs text-slate-400 font-medium hidden sm:inline">WebCMD Extracted • Live Price Match</span>
+          <span class="text-xs text-zinc-400 font-medium hidden sm:inline">WebCMD Extracted • Live Price Match</span>
         </div>
 
         <div id="hotelsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -196,14 +180,14 @@
 
       <!-- Section 3: Food & Groceries -->
       <section class="space-y-5">
-        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+        <div class="flex justify-between items-end border-b border-zinc-800/80 pb-4">
           <div>
-            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-400 uppercase tracking-widest mb-1">
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 uppercase tracking-widest mb-1">
               <span>🍕 Dining & Quick Groceries</span>
             </div>
             <h2 class="text-3xl font-black text-white">Popular Restaurants & Delivery</h2>
           </div>
-          <span class="text-xs text-slate-400 font-medium hidden sm:inline">Swiggy • Zomato • Blinkit</span>
+          <span class="text-xs text-zinc-400 font-medium hidden sm:inline">Swiggy • Zomato • Blinkit</span>
         </div>
 
         <div id="foodGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -213,14 +197,14 @@
 
       <!-- Section 4: Luxury Apparel & Footwear -->
       <section class="space-y-5">
-        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+        <div class="flex justify-between items-end border-b border-zinc-800/80 pb-4">
           <div>
-            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 uppercase tracking-widest mb-1">
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-red-500 uppercase tracking-widest mb-1">
               <span>👔 Luxury Apparel & Footwear</span>
             </div>
             <h2 class="text-3xl font-black text-white">Fashion & Clothes Official Store Deals</h2>
           </div>
-          <span class="text-xs text-slate-400 font-medium hidden sm:inline">Myntra • Ajio • Zara • Nike</span>
+          <span class="text-xs text-zinc-400 font-medium hidden sm:inline">Myntra • Ajio • Zara • Nike</span>
         </div>
 
         <div id="fashionGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -300,65 +284,65 @@
   </div>
 
   <!-- WINNING USPS PITCH DECK MODAL -->
-  <div id="uspModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50 overflow-y-auto">
-    <div class="glass-card border border-violet-500/50 max-w-2xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
-      <button onclick="closeUspModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-2xl font-bold transition">&times;</button>
+  <div id="uspModal" class="hidden fixed inset-0 bg-zinc-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-card border border-amber-500/50 max-w-2xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
+      <button onclick="closeUspModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white text-2xl font-bold transition">&times;</button>
       
-      <div class="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/30 text-violet-300 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+      <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
         <span>🏆 Pitch Deck & Competitive USPs</span>
       </div>
 
       <h2 class="text-3xl font-black text-white mb-2">Why CompareIQ Wins</h2>
-      <p class="text-xs text-slate-400 mb-6 leading-relaxed">Here are the 5 core Unique Selling Propositions (USPs) built into CompareIQ that set it apart from simple static apps:</p>
+      <p class="text-xs text-zinc-400 mb-6 leading-relaxed">Here are the 5 core Unique Selling Propositions (USPs) built into CompareIQ that set it apart from simple static apps:</p>
 
       <div class="space-y-4 text-xs">
         <!-- USP 1 -->
-        <div class="bg-slate-950/90 border border-violet-500/30 p-4 rounded-2xl space-y-1">
+        <div class="bg-zinc-950/90 border border-amber-500/30 p-4 rounded-2xl space-y-1">
           <div class="flex items-center justify-between">
-            <h4 class="font-black text-violet-400 text-sm flex items-center gap-2"><span>1. ⚡</span> Zero API Cost & Autonomous Scraper Engine</h4>
-            <span class="text-[10px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded font-bold">CORE TECH</span>
+            <h4 class="font-black text-amber-400 text-sm flex items-center gap-2"><span>1. ⚡</span> Zero API Cost & Autonomous Scraper Engine</h4>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">CORE TECH</span>
           </div>
-          <p class="text-slate-300">Uses local <code class="text-cyan-400 font-mono">webcmd</code> Playwright headless Chromium instances to scrape real website DOMs live. No paid API subscriptions (SerpAPI, RapidAPI) required!</p>
+          <p class="text-zinc-300">Uses local <code class="text-amber-400 font-mono">webcmd</code> Playwright headless Chromium instances to scrape real website DOMs live. No paid API subscriptions (SerpAPI, RapidAPI) required!</p>
         </div>
 
         <!-- USP 2 -->
-        <div class="bg-slate-950/90 border border-cyan-500/30 p-4 rounded-2xl space-y-1">
+        <div class="bg-zinc-950/90 border border-red-500/30 p-4 rounded-2xl space-y-1">
           <div class="flex items-center justify-between">
-            <h4 class="font-black text-cyan-400 text-sm flex items-center gap-2"><span>2. 🖼️</span> Live Official Site Image & Data Extraction</h4>
-            <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-bold">VISUAL INTELLIGENCE</span>
+            <h4 class="font-black text-red-500 text-sm flex items-center gap-2"><span>2. 🖼️</span> Live Official Site Image & Data Extraction</h4>
+            <span class="text-[10px] bg-red-500/20 text-red-300 px-2 py-0.5 rounded font-bold">VISUAL INTELLIGENCE</span>
           </div>
-          <p class="text-slate-300">Scrapes authentic OpenGraph meta imagery and DOM product photos directly from Amazon, Flipkart, Booking.com, Swiggy & Croma official websites, verified with live site badges.</p>
+          <p class="text-zinc-300">Scrapes authentic OpenGraph meta imagery and DOM product photos directly from Amazon, Flipkart, Booking.com, Swiggy & Croma official websites, verified with live site badges.</p>
         </div>
 
         <!-- USP 3 -->
-        <div class="bg-slate-950/90 border border-emerald-500/30 p-4 rounded-2xl space-y-1">
+        <div class="bg-zinc-950/90 border border-amber-500/30 p-4 rounded-2xl space-y-1">
           <div class="flex items-center justify-between">
-            <h4 class="font-black text-emerald-400 text-sm flex items-center gap-2"><span>3. 🎯</span> Dual Budget Target & Auto-Alert Engine</h4>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold">DEAL TRACKER</span>
+            <h4 class="font-black text-amber-400 text-sm flex items-center gap-2"><span>3. 🎯</span> Dual Budget Target & Auto-Alert Engine</h4>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">DEAL TRACKER</span>
           </div>
-          <p class="text-slate-300">Enter what you need (e.g. AirPods Pro) and your target budget (e.g. ₹18,000). If live price exceeds budget, CompareIQ automatically spawns a 24/7 background monitor daemon.</p>
+          <p class="text-zinc-300">Enter what you need (e.g. AirPods Pro) and your target budget (e.g. ₹18,000). If live price exceeds budget, CompareIQ automatically spawns a 24/7 background monitor daemon.</p>
         </div>
 
         <!-- USP 4 -->
-        <div class="bg-slate-950/90 border border-amber-500/30 p-4 rounded-2xl space-y-1">
+        <div class="bg-zinc-950/90 border border-red-500/30 p-4 rounded-2xl space-y-1">
           <div class="flex items-center justify-between">
-            <h4 class="font-black text-amber-400 text-sm flex items-center gap-2"><span>4. 📍</span> Hyper-Local GPS/IP Multi-Category Scanner</h4>
-            <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">GEOLOCATION</span>
+            <h4 class="font-black text-red-500 text-sm flex items-center gap-2"><span>4. 📍</span> Hyper-Local GPS/IP Multi-Category Scanner</h4>
+            <span class="text-[10px] bg-red-500/20 text-red-300 px-2 py-0.5 rounded font-bold">GEOLOCATION</span>
           </div>
-          <p class="text-slate-300">Automatically resolves user city & location via IP + Reverse Geocoding. Dynamically categorizes local deals for Hotels, Restaurants & Electronics in your vicinity.</p>
+          <p class="text-zinc-300">Automatically resolves user city & location via IP + Reverse Geocoding. Dynamically categorizes local deals for Hotels, Restaurants & Electronics in your vicinity.</p>
         </div>
 
         <!-- USP 5 -->
-        <div class="bg-slate-950/90 border border-slate-700/80 p-4 rounded-2xl space-y-1">
+        <div class="bg-zinc-950/90 border border-zinc-700/80 p-4 rounded-2xl space-y-1">
           <div class="flex items-center justify-between">
             <h4 class="font-black text-white text-sm flex items-center gap-2"><span>5. 💳</span> Instant Interactive Reservation & Payment Modal</h4>
-            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold">ONE-CLICK ACTION</span>
+            <span class="text-[10px] bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded font-bold">ONE-CLICK ACTION</span>
           </div>
-          <p class="text-slate-300">Allows instant booking and deal locking with simulated UPI, Cards, Apple Pay, or Pay at Venue, generating real booking reference receipts.</p>
+          <p class="text-zinc-300">Allows instant booking and deal locking with simulated UPI, Cards, Apple Pay, or Pay at Venue, generating real booking reference receipts.</p>
         </div>
       </div>
 
-      <button onclick="closeUspModal()" class="w-full mt-6 py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-extrabold rounded-2xl text-xs shadow-xl transition">
+      <button onclick="closeUspModal()" class="w-full mt-6 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black rounded-2xl text-xs shadow-xl transition">
         Awesome, Close Window
       </button>
     </div>
@@ -456,17 +440,17 @@
       </div>
 
       <!-- Item Preview Card -->
-      <div class="flex items-center gap-4 bg-slate-950/90 border border-slate-800 p-4 rounded-2xl mb-6 shadow-inner">
-        <img id="payItemImage" src="" class="h-20 w-24 object-cover rounded-xl border border-slate-800 shadow">
+      <div class="flex items-center gap-4 bg-zinc-950/90 border border-zinc-800 p-4 rounded-2xl mb-6 shadow-inner">
+        <img id="payItemImage" src="" class="h-20 w-24 object-cover rounded-xl border border-zinc-800 shadow">
         <div>
-          <span id="payItemProvider" class="text-[10px] bg-violet-500/20 text-violet-300 border border-violet-500/30 px-2 py-0.5 rounded font-black uppercase">PROVIDER</span>
+          <span id="payItemProvider" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded font-black uppercase">PROVIDER</span>
           <h3 id="payItemTitle" class="text-base font-black text-white mt-1 leading-tight">--</h3>
-          <p id="payItemLocation" class="text-xs text-slate-400 mt-0.5">--</p>
+          <p id="payItemLocation" class="text-xs text-zinc-400 mt-0.5">--</p>
         </div>
       </div>
 
       <!-- Target Budget Match Status Notice -->
-      <div id="targetBudgetNotice" class="hidden p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl mb-4 text-xs text-emerald-300 flex items-center gap-2">
+      <div id="targetBudgetNotice" class="hidden p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl mb-4 text-xs text-amber-300 flex items-center gap-2">
         <span>🎯</span>
         <span id="targetBudgetNoticeText">Extracted deal price is within your specified target budget!</span>
       </div>
@@ -475,48 +459,48 @@
       <form id="payForm" onsubmit="executePayment(event)" class="space-y-4">
         
         <!-- Price Summary -->
-        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800/80 space-y-2 text-xs">
-          <div class="flex justify-between text-slate-400">
+        <div class="bg-zinc-950/80 p-4 rounded-2xl border border-zinc-800/80 space-y-2 text-xs">
+          <div class="flex justify-between text-zinc-400">
             <span>Official Extracted Base Price:</span>
-            <strong id="payBasePrice" class="text-slate-200">₹0</strong>
+            <strong id="payBasePrice" class="text-zinc-200">₹0</strong>
           </div>
-          <div class="flex justify-between text-slate-400">
+          <div class="flex justify-between text-zinc-400">
             <span>Taxes & WebCMD Processing:</span>
-            <strong class="text-slate-200">₹180</strong>
+            <strong class="text-zinc-200">₹180</strong>
           </div>
-          <div class="flex justify-between text-slate-400 border-t border-slate-800 pt-2 text-sm">
+          <div class="flex justify-between text-zinc-400 border-t border-zinc-800 pt-2 text-sm">
             <span class="font-bold text-white">Total Amount Due:</span>
-            <strong id="payTotalPrice" class="text-emerald-400 text-xl font-black">₹0</strong>
+            <strong id="payTotalPrice" class="text-amber-400 text-xl font-black">₹0</strong>
           </div>
         </div>
 
         <!-- Payment Method Selector -->
         <div>
-          <label class="text-xs font-black text-slate-300 uppercase tracking-wider block mb-2">Select Payment Method</label>
+          <label class="text-xs font-black text-zinc-300 uppercase tracking-wider block mb-2">Select Payment Method</label>
           <div class="grid grid-cols-2 gap-2 mb-4">
-            <label onclick="switchPayTab('upi')" class="flex items-center gap-2 p-3 bg-slate-950 border border-violet-500/50 rounded-xl cursor-pointer hover:border-violet-400 transition">
-              <input type="radio" name="payMethod" value="UPI / PhonePe / GPay" checked class="text-violet-500">
+            <label onclick="switchPayTab('upi')" class="flex items-center gap-2 p-3 bg-zinc-950 border border-amber-500/50 rounded-xl cursor-pointer hover:border-amber-400 transition">
+              <input type="radio" name="payMethod" value="UPI / PhonePe / GPay" checked class="text-amber-500">
               <span class="text-xs font-bold text-white">📱 UPI / GPay</span>
             </label>
-            <label onclick="switchPayTab('card')" class="flex items-center gap-2 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-violet-500 transition">
-              <input type="radio" name="payMethod" value="Credit/Debit Card" class="text-violet-500">
+            <label onclick="switchPayTab('card')" class="flex items-center gap-2 p-3 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-amber-500 transition">
+              <input type="radio" name="payMethod" value="Credit/Debit Card" class="text-amber-500">
               <span class="text-xs font-bold text-white">💳 Card</span>
             </label>
-            <label onclick="switchPayTab('razorpay')" class="flex items-center gap-2 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-violet-500 transition">
-              <input type="radio" name="payMethod" value="Razorpay Live API" class="text-violet-500">
+            <label onclick="switchPayTab('razorpay')" class="flex items-center gap-2 p-3 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-amber-500 transition">
+              <input type="radio" name="payMethod" value="Razorpay Live API" class="text-amber-500">
               <span class="text-xs font-bold text-white">⚡ Razorpay API</span>
             </label>
-            <label onclick="switchPayTab('venue')" class="flex items-center gap-2 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-violet-500 transition">
-              <input type="radio" name="payMethod" value="Pay at Venue / COD" class="text-violet-500">
+            <label onclick="switchPayTab('venue')" class="flex items-center gap-2 p-3 bg-zinc-950 border border-zinc-800 rounded-xl cursor-pointer hover:border-amber-500 transition">
+              <input type="radio" name="payMethod" value="Pay at Venue / COD" class="text-amber-500">
               <span class="text-xs font-bold text-white">🏢 Pay at Venue</span>
             </label>
           </div>
 
           <!-- Dynamic Field 1: UPI Input -->
           <div id="payFieldsUpi" class="space-y-2">
-            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Enter UPI Virtual Payment Address (VPA)</label>
-            <input id="upiIdInput" type="text" placeholder="e.g. mishant@okicici, 9876543210@ybl" value="mishant@okicici" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
-            <p class="text-[10px] text-slate-500">Supports Google Pay, PhonePe, Paytm, BHIM & Cred UPI IDs.</p>
+            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Enter UPI Virtual Payment Address (VPA)</label>
+            <input id="upiIdInput" type="text" placeholder="e.g. mishant@okicici, 9876543210@ybl" value="mishant@okicici" class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 font-mono">
+            <p class="text-[10px] text-zinc-500">Supports Google Pay, PhonePe, Paytm, BHIM & Cred UPI IDs.</p>
           </div>
 
           <!-- Dynamic Field 2: Credit/Debit Card Input with Live BIN Brand Auto-Detection -->
@@ -725,8 +709,10 @@
         const data = await res.json();
         if (data.alerts && data.alerts.length > 0) {
           const topAlert = data.alerts[0];
-          document.getElementById('alertSummaryText').innerText = `Monitoring ${topAlert.product} | Target: ₹${topAlert.targetPrice.toLocaleString('en-IN')} | Current Lowest: ₹${topAlert.currentBestPrice.toLocaleString('en-IN')}`;
-          document.getElementById('activeAlertsBanner').classList.remove('hidden');
+          const summary = document.getElementById('alertSummaryText');
+          const banner = document.getElementById('activeAlertsBanner');
+          if (summary) summary.innerText = `Monitoring ${topAlert.product} | Target: ₹${topAlert.targetPrice.toLocaleString('en-IN')} | Current Lowest: ₹${topAlert.currentBestPrice.toLocaleString('en-IN')}`;
+          if (banner) banner.classList.remove('hidden');
         }
       } catch (e) {}
     }
