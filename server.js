@@ -709,11 +709,13 @@ app.post('/api/alerts/create', (req, res) => {
 });
 
 app.post('/api/pay', (req, res) => {
-  const { itemName, price, paymentMethod, upiId, cardMasked, razorpayKey, location } = req.body;
+  const { itemName, price, paymentMethod, upiId, cardMasked, razorpayKey, location, shippingName, shippingPhone, shippingAddress, shippingCity, shippingPincode } = req.body;
   const bookingId = 'BK-' + Math.random().toString(36).substring(2, 9).toUpperCase();
   const txnId = 'TXN-' + Math.random().toString(36).substring(2, 10).toUpperCase();
 
-  console.log(`[CompareIQ Payment Gateway] Payment Verified for "${itemName}" via ${paymentMethod}. Txn ID: ${txnId}, Booking ID: ${bookingId}`);
+  const deliveryStr = shippingAddress ? `${shippingAddress}, ${shippingCity || location || ''} (${shippingPincode || ''})` : (location || 'your location');
+
+  console.log(`[CompareIQ Payment Gateway] Payment Verified for "${itemName}" via ${paymentMethod}. Txn ID: ${txnId}, Booking ID: ${bookingId}, Recipient: ${shippingName || 'Customer'} @ ${deliveryStr}`);
 
   res.json({
     success: true,
@@ -724,9 +726,12 @@ app.post('/api/pay', (req, res) => {
     paymentMethod,
     upiId: upiId || undefined,
     cardMasked: cardMasked || undefined,
+    shippingName: shippingName || 'Customer',
+    shippingPhone: shippingPhone || '',
+    deliveryAddress: deliveryStr,
     gateway: razorpayKey ? 'Razorpay Live Merchant Gateway' : 'CompareIQ Instant Sandbox Gateway',
     status: 'CONFIRMED',
-    message: `Payment Confirmed via ${paymentMethod}! Order locked for ${itemName} in ${location || 'your location'}.`,
+    message: `Payment Confirmed via ${paymentMethod}! Order locked for ${itemName}. Delivering to: ${shippingName || 'Customer'}, ${deliveryStr}.`,
     timestamp: new Date().toISOString()
   });
 });
