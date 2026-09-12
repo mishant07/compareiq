@@ -146,6 +146,23 @@
 
     </div>
 
+    <!-- Dedicated Live Search Results Comparison Section -->
+    <section id="searchResultsSection" class="hidden mb-12 space-y-5 pt-4 border-t border-amber-500/30">
+      <div class="flex justify-between items-end border-b border-amber-500/40 pb-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 uppercase tracking-widest mb-1">
+            <span>⚡ WebCMD Live Store Extraction & Comparison</span>
+          </div>
+          <h2 class="text-3xl font-black text-white">Verified Store Deals for <span id="searchResultsQueryText" class="text-amber-400">Query</span></h2>
+        </div>
+        <span class="text-xs text-amber-400/80 font-bold bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-xl">Amazon • Flipkart • Croma</span>
+      </div>
+
+      <div id="searchResultsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Live search comparison cards rendered dynamically here -->
+      </div>
+    </section>
+
     <!-- Categorized Photo Cards Dashboard -->
     <div id="locationDashboard" class="space-y-12">
       
@@ -696,7 +713,7 @@
 
     const fallbackImageMap = {
       airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
-      iphone: 'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg',
+      iphone: 'https://m.media-amazon.com/images/I/61EUYqQSoTL._AC_SL1500_.jpg',
       headphone: 'https://m.media-amazon.com/images/I/51aXvjzcukL._AC_SL1500_.jpg',
       laptop: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200&auto=format&fit=crop&q=80',
       hotel: 'https://www.illumania.com/_readwritedata/location_image/a850ee0d-46c6-42a9-819f-c3bd34b0f02e.jpg',
@@ -1411,9 +1428,15 @@
     }
 
     async function startSearch() {
-      const query = document.getElementById('searchInput').value.trim();
+      const queryInput = document.getElementById('searchInput');
+      const query = queryInput.value.trim();
       const targetPriceVal = document.getElementById('searchTargetPriceInput').value.trim();
       if (!query) return alert('Enter search query!');
+
+      const btn = document.getElementById('searchBtn');
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="animate-pulse">🔎 Extracting Amazon, Flipkart & Croma...</span>';
 
       const googleUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
       addLog(`[CompareIQ] Executing WebCMD live extraction for: "${query}" (Target: ₹${targetPriceVal || 'Any'}) in ${activeLocation}...`, googleUrl);
@@ -1426,8 +1449,8 @@
         });
         const data = await res.json();
 
-        if (data.success) {
-          addLog(`[WebCMD Agent] Live Search & Google Images extracted! Winner: ${data.winner.store} (${data.winner.priceDisplay})`, data.winner.image);
+        if (data.success && data.comparisonResults) {
+          addLog(`[WebCMD Agent] Live Store Deals extracted for "${query}"! Winner: ${data.winner.store} (${data.winner.priceDisplay})`, data.winner.image);
           
           if (targetPriceVal && data.winner.priceNum > parseInt(targetPriceVal, 10)) {
             // Auto-create price alert if target budget exceeded
@@ -1438,17 +1461,71 @@
             }).then(() => loadActiveAlerts());
           }
 
-          openPayModal(
-            `${data.query} (${data.winner.store})`, 
-            data.winner.store, 
-            data.winner.priceNum, 
-            data.winner.image, 
-            activeLocation,
-            targetPriceVal
-          );
+          // Render Comparison Cards Grid
+          const searchSection = document.getElementById('searchResultsSection');
+          const searchGrid = document.getElementById('searchResultsGrid');
+          const queryText = document.getElementById('searchResultsQueryText');
+
+          if (queryText) queryText.innerText = `"${data.query}"`;
+          if (searchGrid) {
+            searchGrid.innerHTML = data.comparisonResults.map(item => `
+              <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-amber-500/40 bg-zinc-950/80">
+                <div>
+                  <div class="relative h-60 overflow-hidden bg-zinc-950 p-4 flex items-center justify-center">
+                    <img src="${item.image}" alt="${item.store} - ${data.query}" onerror="if('${data.query}'.toLowerCase().includes('iphone')) this.src='${fallbackImageMap.iphone}'; else if('${data.query}'.toLowerCase().includes('sony')) this.src='${fallbackImageMap.headphone}'; else this.src='${fallbackImageMap.airpods}';" class="max-h-full max-w-full object-contain rounded-xl transition duration-500 card-hover:scale-105">
+                    <span class="absolute top-3 left-3 bg-amber-400 text-slate-950 px-3 py-1 rounded-xl text-[11px] font-black uppercase tracking-widest shadow">
+                      ${item.store}
+                    </span>
+                    <span class="absolute top-3 right-3 bg-zinc-900/90 border border-zinc-800 text-amber-300 font-bold px-2.5 py-0.5 rounded-lg text-xs shadow">
+                      ${item.rating}
+                    </span>
+                  </div>
+
+                  <div class="p-5 space-y-2">
+                    <div class="flex justify-between items-start">
+                      <h3 class="font-black text-white text-lg leading-snug">${data.query}</h3>
+                    </div>
+                    <p class="text-xs text-zinc-400 font-medium">🛒 Verified Official ${item.store} Listing</p>
+                    <p class="text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block">
+                      ${item.estDelivery}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="p-5 pt-0 space-y-3 border-t border-zinc-800/80 mt-2">
+                  <div class="flex justify-between items-center pt-3">
+                    <div>
+                      <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Live Price</span>
+                      <span class="text-2xl font-black text-amber-400">${item.priceDisplay}</span>
+                    </div>
+                    <button onclick="openPayModal('${data.query} (${item.store})', '${item.store}', ${item.priceNum}, '${item.image}', '${activeLocation}', '${targetPriceVal}')" class="px-5 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+                      <span>💳 Buy Deal</span>
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2">
+                    <a href="${item.url}" target="_blank" class="py-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+                      <span>🌐 Store Page</span>
+                    </a>
+                    <button onclick="openAlertModal('${data.query}', ${item.priceNum})" class="py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+                      <span>🔔 Set Alert</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `).join('');
+          }
+
+          if (searchSection) {
+            searchSection.classList.remove('hidden');
+            searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
       } catch (e) {
         addLog(`[Error] Search failed.`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
       }
     }
   </script>

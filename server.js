@@ -256,7 +256,7 @@ app.post('/api/extract-google-image', async (req, res) => {
 
 // Curated 100% Verified Crisp 4K Official Brand & Stay Photos Map
 const hdCuratedMap = {
-  iphone: 'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg',
+  iphone: 'https://m.media-amazon.com/images/I/61EUYqQSoTL._AC_SL1500_.jpg',
   airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
   sony: 'https://m.media-amazon.com/images/I/51aXvjzcukL._AC_SL1500_.jpg',
   taj: 'https://www.illumania.com/_readwritedata/location_image/a850ee0d-46c6-42a9-819f-c3bd34b0f02e.jpg',
