@@ -361,48 +361,71 @@
       <p class="text-xs text-slate-400 mb-6">CompareIQ will automatically scan official sites and notify you when price hits target.</p>
 
       <form onsubmit="createPriceAlert(event)" class="space-y-4">
+        <input id="alertCurrentPrice" type="hidden" value="119900" />
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Product Name</label>
           <input 
             id="alertProduct" 
             type="text" 
-            placeholder="e.g. AirPods Pro (2nd Gen)" 
-            value="AirPods Pro (2nd Gen)"
-            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500"
+            placeholder="e.g. Apple iPhone 16 Pro" 
+            value="Apple iPhone 16 Pro"
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 font-medium"
             required
           >
         </div>
 
-        <div>
-          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Target Price (₹)</label>
-          <input 
-            id="alertTargetPrice" 
-            type="number" 
-            placeholder="e.g. 18000" 
-            value="18000"
-            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500"
-            required
-          >
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Target Budget (₹)</label>
+            <input 
+              id="alertTargetPrice" 
+              type="number" 
+              placeholder="e.g. 115000" 
+              value="115000"
+              class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-amber-400 font-extrabold text-sm focus:outline-none focus:border-amber-500"
+              required
+            >
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Current Best (₹)</label>
+            <input 
+              id="alertDisplayCurrentPrice" 
+              type="text" 
+              value="₹1,19,900"
+              readonly
+              class="w-full px-4 py-3 bg-slate-900/60 border border-slate-800 rounded-xl text-slate-400 font-bold text-sm cursor-not-allowed"
+            >
+          </div>
         </div>
 
         <div>
-          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Notification Email / SMS</label>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Notification Recipient Email</label>
           <input 
             id="alertEmail" 
             type="email" 
             placeholder="user@example.com" 
             value="user@example.com"
-            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500"
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 font-medium"
             required
           >
         </div>
 
-        <button 
-          type="submit" 
-          class="w-full py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-2xl transition shadow-xl shadow-orange-500/25 text-sm flex items-center justify-center gap-2 mt-4"
-        >
-          <span>🔔 Start Live Monitoring</span>
-        </button>
+        <div class="pt-2 space-y-2">
+          <button 
+            type="submit" 
+            class="w-full py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-2xl transition shadow-xl shadow-orange-500/25 text-sm flex items-center justify-center gap-2"
+          >
+            <span>🔔 Enable 24/7 Auto Email Monitor</span>
+          </button>
+          
+          <button 
+            type="button" 
+            onclick="triggerTestEmailAlert()"
+            class="w-full py-3 bg-slate-900 hover:bg-slate-800 border border-amber-500/30 text-amber-400 font-bold rounded-2xl transition text-xs flex items-center justify-center gap-2"
+          >
+            <span>📧 Dispatch Instant Test Email Alert Now</span>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -807,7 +830,16 @@
       document.getElementById('uspModal').classList.add('hidden');
     }
 
-    function openAlertModal() {
+    function openAlertModal(productName = null, currentPrice = null) {
+      if (productName) {
+        document.getElementById('alertProduct').value = productName;
+      }
+      if (currentPrice) {
+        const numPrice = parseInt(currentPrice, 10);
+        document.getElementById('alertCurrentPrice').value = numPrice;
+        document.getElementById('alertDisplayCurrentPrice').value = `₹${numPrice.toLocaleString('en-IN')}`;
+        document.getElementById('alertTargetPrice').value = Math.floor(numPrice * 0.95);
+      }
       document.getElementById('alertModal').classList.remove('hidden');
     }
 
@@ -819,6 +851,7 @@
       if (e) e.preventDefault();
       const product = document.getElementById('alertProduct').value.trim();
       const targetPrice = document.getElementById('alertTargetPrice').value.trim();
+      const currentPrice = document.getElementById('alertCurrentPrice').value.trim();
       const notifyEmail = document.getElementById('alertEmail').value.trim();
 
       try {
@@ -833,16 +866,49 @@
           const emailRes = await fetch('/api/alerts/trigger-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ product, targetPrice, currentPrice: 19490, notifyEmail })
+            body: JSON.stringify({ product, targetPrice, currentPrice, notifyEmail })
           });
           const emailData = await emailRes.json();
 
-          alert(`${data.message}\n\n[Email Notification Engine]: ${emailData.message}`);
+          let msg = `✅ ${data.message}\n\n[Email Engine]: ${emailData.message}`;
+          if (emailData.previewUrl) {
+            msg += `\n\n[Opening Ethereal Live Email Link...]`;
+            window.open(emailData.previewUrl, '_blank');
+          }
+          alert(msg);
           closeAlertModal();
           loadActiveAlerts();
         }
       } catch (err) {
-        alert('Failed to set alert.');
+        alert('Failed to set price alert.');
+      }
+    }
+
+    async function triggerTestEmailAlert() {
+      const product = document.getElementById('alertProduct').value.trim();
+      const targetPrice = document.getElementById('alertTargetPrice').value.trim();
+      const currentPrice = document.getElementById('alertCurrentPrice').value.trim();
+      const notifyEmail = document.getElementById('alertEmail').value.trim();
+
+      try {
+        const emailRes = await fetch('/api/alerts/trigger-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product, targetPrice, currentPrice, notifyEmail, forceSend: true })
+        });
+        const emailData = await emailRes.json();
+        if (emailData.success) {
+          let msg = `📧 Instant Price Drop Email Alert Dispatched to ${notifyEmail}!\n\n${emailData.message}`;
+          if (emailData.previewUrl) {
+            msg += `\n\n[Opening Live Ethereal HTML Email Preview...]`;
+            window.open(emailData.previewUrl, '_blank');
+          }
+          alert(msg);
+        } else {
+          alert('Email dispatch failed: ' + (emailData.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Failed to dispatch test email.');
       }
     }
 
