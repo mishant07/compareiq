@@ -401,7 +401,13 @@ app.post('/api/compare', async (req, res) => {
     // Run live WebCMD Playwright execution on official Amazon site to pull live page title, image & price
     const officialAmazonData = await extractOfficialSiteData(amazonUrl);
 
-    const itemImage = resolveOfficialImage(query, category, officialAmazonData.image);
+    let extractedImg = officialAmazonData.image;
+    if (!extractedImg) {
+      // Fall back to WebCMD live Google Images search
+      extractedImg = await searchGoogleImages(query);
+    }
+
+    const itemImage = resolveOfficialImage(query, category, extractedImg);
     const isAirpods = query.toLowerCase().includes('airpod');
     const isIphone = query.toLowerCase().includes('iphone');
 

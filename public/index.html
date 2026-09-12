@@ -61,21 +61,11 @@
         </div>
       </div>
 
-      <!-- Location, USP, API Keys & Price Alert Buttons -->
-      <div class="w-full lg:w-auto flex flex-wrap items-center gap-2.5">
+      <!-- Header Action Controls -->
+      <div class="w-full lg:w-auto flex items-center gap-3">
         
-        <!-- API Keys Configuration Button -->
-        <button onclick="openApiKeyModal()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs rounded-2xl transition shadow-xl shadow-emerald-500/25 flex items-center gap-1.5 border border-emerald-400/40">
-          <span>🔑 API Keys Engine</span>
-        </button>
-
-        <!-- USP Pitch Deck Button -->
-        <button onclick="openUspModal()" class="px-4 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-black text-xs rounded-2xl transition shadow-xl shadow-violet-600/30 flex items-center gap-1.5 border border-violet-400/30">
-          <span>🏆 Winning USPs Explained</span>
-        </button>
-
         <!-- Price Drop Alert Button -->
-        <button onclick="openAlertModal()" class="px-4 py-2.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-2xl transition shadow-xl shadow-orange-500/25 flex items-center gap-1.5">
+        <button onclick="openAlertModal()" class="px-5 py-3 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-2xl transition shadow-xl shadow-orange-500/25 flex items-center gap-2 border border-amber-400/40">
           <span>🔔 24/7 Price Drop Alert</span>
         </button>
 
@@ -91,59 +81,12 @@
               class="bg-transparent text-xs font-bold text-white focus:outline-none w-28 sm:w-32"
             >
           </div>
-          <button onclick="autoDetectLocation()" title="Auto Detect Location" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl text-slate-200 font-bold transition">
+          <button onclick="autoDetectLocation()" title="Auto Detect Location" class="px-3.5 py-1.5 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-xs rounded-xl text-white font-bold transition shadow-lg">
             📍 Detect
           </button>
         </div>
       </div>
     </header>
-
-    <!-- Unique USPs Winning Banner -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-violet-500/30 hover:border-violet-400 transition cursor-pointer group">
-        <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">⚡</span>
-            <h4 class="text-xs font-black uppercase tracking-wider text-violet-400">Zero API Cost Engine</h4>
-          </div>
-          <span class="text-[10px] text-violet-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
-        </div>
-        <p class="text-[11px] text-slate-400">Runs live Playwright browser steps — bypasses expensive API paywalls completely.</p>
-      </div>
-
-      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 transition cursor-pointer group">
-        <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🖼️</span>
-            <h4 class="text-xs font-black uppercase tracking-wider text-cyan-400">Live Official Site Images</h4>
-          </div>
-          <span class="text-[10px] text-cyan-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
-        </div>
-        <p class="text-[11px] text-slate-400">Extracts authentic images directly from Amazon, Flipkart, Booking.com & Croma DOM.</p>
-      </div>
-
-      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-emerald-500/30 hover:border-emerald-400 transition cursor-pointer group">
-        <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🎯</span>
-            <h4 class="text-xs font-black uppercase tracking-wider text-emerald-400">Dual Budget Engine</h4>
-          </div>
-          <span class="text-[10px] text-emerald-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
-        </div>
-        <p class="text-[11px] text-slate-400">Enter target price (e.g. AirPods @ ₹18k) — auto-triggers 24/7 background alerts!</p>
-      </div>
-
-      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-amber-500/30 hover:border-amber-400 transition cursor-pointer group">
-        <div class="flex items-center justify-between mb-1">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">📍</span>
-            <h4 class="text-xs font-black uppercase tracking-wider text-amber-400">Location Intelligence</h4>
-          </div>
-          <span class="text-[10px] text-amber-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
-        </div>
-        <p class="text-[11px] text-slate-400">Auto-detects GPS/IP to extract local deals for Hotels, Dining & Shopping.</p>
-      </div>
-    </div>
 
     <!-- Active Price Drop Alerts Bar -->
     <div id="activeAlertsBanner" class="hidden glass-card rounded-2xl p-4 border border-amber-500/40 bg-amber-500/10 shadow-xl">
@@ -635,6 +578,7 @@
     };
 
     window.addEventListener('DOMContentLoaded', () => {
+      scanLocation();
       autoDetectLocation();
       loadActiveAlerts();
     });
