@@ -255,7 +255,7 @@ app.post('/api/extract-google-image', async (req, res) => {
 
 // Curated 100% Verified Crisp 4K Official Brand & Stay Photos Map
 const hdCuratedMap = {
-  iphone: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=1200&auto=format&fit=crop&q=80',
+  iphone: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=1200&auto=format&fit=crop&q=80',
   airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
   sony: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=1200&auto=format&fit=crop&q=80',
   taj: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&auto=format&fit=crop&q=80',
@@ -274,8 +274,8 @@ const googleImageCache = {};
 async function resolveHDImage(query) {
   const q = (query || '').toLowerCase();
   
-  if (q.includes('iphone') || q.includes('apple') || q.includes('titanium')) return hdCuratedMap.iphone;
   if (q.includes('airpod')) return hdCuratedMap.airpods;
+  if (q.includes('iphone') || q.includes('titanium')) return hdCuratedMap.iphone;
   if (q.includes('sony') || q.includes('headphone') || q.includes('xm5')) return hdCuratedMap.sony;
   if (q.includes('taj')) return hdCuratedMap.taj;
   if (q.includes('oberoi')) return hdCuratedMap.oberoi;
@@ -286,6 +286,7 @@ async function resolveHDImage(query) {
   if (q.includes('jordan') || q.includes('nike') || q.includes('shoe')) return hdCuratedMap.jordan;
   if (q.includes('zara') || q.includes('shirt') || q.includes('linen')) return hdCuratedMap.zara;
   if (q.includes('levi') || q.includes('denim') || q.includes('jacket')) return hdCuratedMap.levis;
+  if (q.includes('apple')) return hdCuratedMap.iphone;
 
   if (googleImageCache[query]) return googleImageCache[query];
 
