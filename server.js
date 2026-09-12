@@ -255,18 +255,18 @@ app.post('/api/extract-google-image', async (req, res) => {
 
 // Curated 100% Verified Crisp 4K Official Brand & Stay Photos Map
 const hdCuratedMap = {
-  iphone: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=1200&auto=format&fit=crop&q=80',
+  iphone: 'https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg',
   airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
-  sony: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=1200&auto=format&fit=crop&q=80',
-  taj: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&auto=format&fit=crop&q=80',
-  oberoi: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&auto=format&fit=crop&q=80',
-  hyatt: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80',
-  pizza: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop&q=80',
-  biryani: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1200&auto=format&fit=crop&q=80',
-  grocery: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&auto=format&fit=crop&q=80',
-  jordan: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=1200&auto=format&fit=crop&q=80',
-  zara: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=1200&auto=format&fit=crop&q=80',
-  levis: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=1200&auto=format&fit=crop&q=80'
+  sony: 'https://m.media-amazon.com/images/I/51aXvjzcukL._AC_SL1500_.jpg',
+  taj: 'https://www.illumania.com/_readwritedata/location_image/a850ee0d-46c6-42a9-819f-c3bd34b0f02e.jpg',
+  oberoi: 'https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/gallery/featured/mumbai-gallery-featured-1-exterior-724x407.jpg',
+  hyatt: 'https://media-cdn.tripadvisor.com/media/photo-s/14/0b/20/dc/hotel-facade.jpg',
+  pizza: 'https://static.vecteezy.com/system/resources/previews/068/629/747/large_2x/gourmet-prosciutto-pizza-baked-in-wood-fired-oven-free-photo.jpg',
+  biryani: 'https://authenticroyal.com/wp-content/uploads/2024/10/royal-rice-may-220461.jpg',
+  grocery: 'https://images.stockcake.com/public/f/d/2/fd2900e6-096e-418b-93a4-30c312127489_large/organic-grocery-store-stockcake.jpg',
+  jordan: 'https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/6c389fcd-8609-4632-8eee-0f3449652b68/air-jordan-1-retro-high-og-shoes-Pz6fZ9.png',
+  zara: 'https://static.zara.net/photos/2023/W/0/1/p/5520/043/500/2/w/375/5520043500_2_1_1.jpg?ts=1674122825705',
+  levis: 'https://media-photos.depop.com/b1/9257858/1778076210_1dcd18f29f7c4b49921e7a8a45deb355/P0.jpg'
 };
 
 const googleImageCache = {};
