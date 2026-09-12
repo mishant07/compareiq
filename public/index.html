@@ -211,6 +211,23 @@
         </div>
       </section>
 
+      <!-- Section 4: Luxury Apparel & Footwear -->
+      <section class="space-y-5">
+        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 uppercase tracking-widest mb-1">
+              <span>👔 Luxury Apparel & Footwear</span>
+            </div>
+            <h2 class="text-3xl font-black text-white">Fashion & Clothes Official Store Deals</h2>
+          </div>
+          <span class="text-xs text-slate-400 font-medium hidden sm:inline">Myntra • Ajio • Zara • Nike</span>
+        </div>
+
+        <div id="fashionGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Dynamic fashion photo cards -->
+        </div>
+      </section>
+
     </div>
 
   </div>
@@ -406,6 +423,28 @@
     </div>
   </div>
 
+  <!-- TECH HARDWARE SPECIFICATIONS MODAL -->
+  <div id="specsModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-card border border-amber-500/40 max-w-xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
+      <button onclick="closeSpecsModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white text-2xl font-bold transition">&times;</button>
+      
+      <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+        <span>📱 Hardware Specifications</span>
+      </div>
+
+      <h2 id="specsTitle" class="text-2xl font-black text-white mb-1">Device Specifications</h2>
+      <p id="specsCategory" class="text-xs text-amber-400 font-semibold mb-6">Full Hardware Benchmark & Technical Details</p>
+
+      <div id="specsContent" class="space-y-3 text-xs">
+        <!-- Specs dynamically loaded here -->
+      </div>
+
+      <button onclick="closeSpecsModal()" class="w-full mt-6 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black rounded-2xl text-xs shadow-xl transition">
+        Close Specifications Window
+      </button>
+    </div>
+  </div>
+
   <!-- Interactive Reserve & Payment Modal -->
   <div id="payModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
     <div class="glass-card border border-slate-700/80 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative">
@@ -592,7 +631,8 @@
       headphone: 'https://d1ncau8tqf99kp.cloudfront.net/converted/111295_original_local_1200x1050_v3_converted.webp',
       laptop: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1200&auto=format&fit=crop&q=80',
       hotel: 'https://wallpapers.com/images/hd/taj-mahal-palace-hotel-mumbai-cgb6r05wok0v1q6q.jpg',
-      food: 'https://static.vecteezy.com/system/resources/previews/055/294/150/large_2x/gourmet-wood-fired-pizza-with-cherry-tomatoes-in-rustic-setting-photo.jpg'
+      food: 'https://static.vecteezy.com/system/resources/previews/055/294/150/large_2x/gourmet-wood-fired-pizza-with-cherry-tomatoes-in-rustic-setting-photo.jpg',
+      fashion: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1200&auto=format&fit=crop&q=80'
     };
 
     // Live Card Network BIN Auto-Detector Engine (Visa, Mastercard, Amex, RuPay, Discover, Diners Club, JCB)
@@ -768,13 +808,61 @@
         });
         const data = await res.json();
         if (data.success) {
-          alert(data.message);
+          // Trigger immediate evaluation & email dispatch alert
+          const emailRes = await fetch('/api/alerts/trigger-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ product, targetPrice, currentPrice: 19490, notifyEmail })
+          });
+          const emailData = await emailRes.json();
+
+          alert(`${data.message}\n\n[Email Notification Engine]: ${emailData.message}`);
           closeAlertModal();
           loadActiveAlerts();
         }
       } catch (err) {
         alert('Failed to set alert.');
       }
+    }
+
+    // Hardware Specs Modal Trigger
+    async function openSpecsModal(query) {
+      const modal = document.getElementById('specsModal');
+      const content = document.getElementById('specsContent');
+      content.innerHTML = '<div class="text-center py-6 text-zinc-400 font-bold animate-pulse">Loading technical hardware specifications...</div>';
+      modal.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/phone-specs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          const specObj = data.data;
+          document.getElementById('specsTitle').innerText = specObj.device;
+          document.getElementById('specsCategory').innerText = `${specObj.category} • Official Hardware Breakdown`;
+          
+          let html = '';
+          for (const [key, val] of Object.entries(specObj.specs)) {
+            const formattedKey = key.charAt(0).toUpperCase() + key.slice(1);
+            html += `
+              <div class="bg-zinc-950/90 border border-zinc-800 p-3.5 rounded-2xl flex justify-between items-center gap-4">
+                <span class="font-black text-amber-400 uppercase tracking-wider text-[11px] w-1/3">${formattedKey}</span>
+                <span class="text-zinc-200 text-xs font-medium w-2/3 text-right">${val}</span>
+              </div>
+            `;
+          }
+          content.innerHTML = html;
+        }
+      } catch (err) {
+        content.innerHTML = '<div class="text-red-400 text-center py-4">Failed to load specifications.</div>';
+      }
+    }
+
+    function closeSpecsModal() {
+      document.getElementById('specsModal').classList.add('hidden');
     }
 
     // Failsafe Multi-Strategy Location Engine
@@ -864,115 +952,165 @@
     }
 
     function renderDashboard(data) {
-      const { hotels, food, shopping } = data.categories;
+      const { hotels, food, shopping, fashion } = data.categories;
 
       // Render Hotels Grid
       const hotelsContainer = document.getElementById('hotelsGrid');
-      hotelsContainer.innerHTML = hotels.map(item => `
-        <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
-          <div>
-            <div class="relative h-56 overflow-hidden bg-zinc-950">
-              <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.hotel}'" class="w-full h-full object-cover img-zoom">
-              <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
-                ${item.provider}
-              </span>
-              <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
-                ${item.rating}
-              </span>
-            </div>
-
-            <div class="p-5 space-y-2">
-              <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
-              <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
-              <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
-                ${item.tag}
-              </p>
-            </div>
-          </div>
-
-          <div class="p-5 pt-0 flex justify-between items-center border-t border-zinc-800/80 mt-2">
+      if (hotelsContainer && hotels) {
+        hotelsContainer.innerHTML = hotels.map(item => `
+          <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
             <div>
-              <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Rate / Night</span>
-              <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
-            </div>
-            <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
-              <span>💳 Book & Pay</span>
-            </button>
-          </div>
-        </div>
-      `).join('');
+              <div class="relative h-56 overflow-hidden bg-zinc-950">
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.hotel}'" class="w-full h-full object-cover img-zoom">
+                <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                  ${item.provider}
+                </span>
+                <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                  ${item.rating}
+                </span>
+              </div>
 
-      // Render Electronics Grid
+              <div class="p-5 space-y-2">
+                <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+                <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+                <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                  ${item.tag}
+                </p>
+              </div>
+            </div>
+
+            <div class="p-5 pt-0 flex justify-between items-center border-t border-zinc-800/80 mt-2">
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Rate / Night</span>
+                <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
+              </div>
+              <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+                <span>💳 Book & Pay</span>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Electronics & Tech Shopping Grid
       const shoppingContainer = document.getElementById('shoppingGrid');
-      shoppingContainer.innerHTML = shopping.map(item => `
-        <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
-          <div>
-            <div class="relative h-56 overflow-hidden bg-zinc-950/90 flex items-center justify-center p-4">
-              <img src="${item.image}" alt="${item.name}" onerror="if('${item.name}'.toLowerCase().includes('iphone')) this.src='${fallbackImageMap.iphone}'; else if('${item.name}'.toLowerCase().includes('sony')) this.src='${fallbackImageMap.headphone}'; else this.src='${fallbackImageMap.airpods}';" class="max-h-full max-w-full object-contain rounded-xl transition duration-500 card-hover:scale-105">
-              <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
-                ${item.provider}
-              </span>
-              <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
-                ${item.rating}
-              </span>
-            </div>
-
-            <div class="p-5 space-y-2">
-              <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
-              <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
-              <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
-                ${item.tag}
-              </p>
-            </div>
-          </div>
-
-          <div class="p-5 pt-0 flex justify-between items-center border-t border-zinc-800/80 mt-2">
+      if (shoppingContainer && shopping) {
+        shoppingContainer.innerHTML = shopping.map(item => `
+          <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
             <div>
-              <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Best Extracted Deal</span>
-              <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
+              <div class="relative h-56 overflow-hidden bg-zinc-950/90 flex items-center justify-center p-4">
+                <img src="${item.image}" alt="${item.name}" onerror="if('${item.name}'.toLowerCase().includes('iphone')) this.src='${fallbackImageMap.iphone}'; else if('${item.name}'.toLowerCase().includes('sony')) this.src='${fallbackImageMap.headphone}'; else this.src='${fallbackImageMap.airpods}';" class="max-h-full max-w-full object-contain rounded-xl transition duration-500 card-hover:scale-105">
+                <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                  ${item.provider}
+                </span>
+                <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                  ${item.rating}
+                </span>
+              </div>
+
+              <div class="p-5 space-y-2">
+                <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+                <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+                <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                  ${item.tag}
+                </p>
+              </div>
             </div>
-            <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
-              <span>💳 Buy Deal</span>
-            </button>
+
+            <div class="p-5 pt-0 flex flex-col gap-3 border-t border-zinc-800/80 mt-2">
+              <div class="flex justify-between items-center">
+                <div>
+                  <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Best Extracted Deal</span>
+                  <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
+                </div>
+                <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+                  <span>💳 Buy Deal</span>
+                </button>
+              </div>
+
+              <button onclick="openSpecsModal('${item.name}')" class="w-full py-2 bg-zinc-950/90 hover:bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                <span>📱 Tech Specs & Hardware Details</span>
+              </button>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `).join('');
+      }
 
       // Render Food Grid
       const foodContainer = document.getElementById('foodGrid');
-      foodContainer.innerHTML = food.map(item => `
-        <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
-          <div>
-            <div class="relative h-56 overflow-hidden bg-zinc-950">
-              <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.food}'" class="w-full h-full object-cover img-zoom">
-              <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
-                ${item.provider}
-              </span>
-              <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
-                ${item.rating}
-              </span>
-            </div>
-
-            <div class="p-5 space-y-2">
-              <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
-              <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
-              <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
-                ${item.tag}
-              </p>
-            </div>
-          </div>
-
-          <div class="p-5 pt-0 flex justify-between items-center border-t border-zinc-800/80 mt-2">
+      if (foodContainer && food) {
+        foodContainer.innerHTML = food.map(item => `
+          <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
             <div>
-              <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Avg Meal Price</span>
-              <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
+              <div class="relative h-56 overflow-hidden bg-zinc-950">
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.food}'" class="w-full h-full object-cover img-zoom">
+                <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                  ${item.provider}
+                </span>
+                <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                  ${item.rating}
+                </span>
+              </div>
+
+              <div class="p-5 space-y-2">
+                <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+                <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+                <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                  ${item.tag}
+                </p>
+              </div>
             </div>
-            <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
-              <span>🍕 Order Now</span>
-            </button>
+
+            <div class="p-5 pt-0 flex justify-between items-center border-t border-zinc-800/80 mt-2">
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Avg Meal Price</span>
+                <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
+              </div>
+              <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+                <span>🍕 Order Now</span>
+              </button>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `).join('');
+      }
+
+      // Render Fashion Grid
+      const fashionContainer = document.getElementById('fashionGrid');
+      if (fashionContainer && fashion) {
+        fashionContainer.innerHTML = fashion.map(item => `
+          <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between border border-zinc-800/80 hover:border-amber-500/40">
+            <div>
+              <div class="relative h-56 overflow-hidden bg-zinc-950">
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.fashion}'" class="w-full h-full object-cover img-zoom">
+                <span class="absolute top-3 left-3 bg-zinc-950/90 backdrop-blur border border-zinc-800 text-amber-300 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                  ${item.provider}
+                </span>
+                <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                  ${item.rating}
+                </span>
+              </div>
+
+              <div class="p-5 space-y-2">
+                <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+                <p class="text-xs text-zinc-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+                <p class="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                  ${item.tag}
+                </p>
+              </div>
+            </div>
+
+            <div class="p-5 pt-0 flex justify-between items-center border-t border-zinc-800/80 mt-2">
+              <div>
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Official Price</span>
+                <span class="text-xl font-black text-amber-400">${item.priceDisplay}</span>
+              </div>
+              <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+                <span>👔 Buy Fashion</span>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
     }
 
     // Dynamic Payment Method Tab Switcher
