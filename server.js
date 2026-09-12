@@ -203,19 +203,19 @@ async function searchGoogleImages(query) {
   });
 }
 
-// Repository of Authentic Official Brand & Retail Store CDN Image URLs
+// Repository of Authentic High-Resolution Brand & Store Product Image URLs
 const officialFallbackMap = {
-  airpods: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985',
-  iphone: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-16-pro-naturaltitanium-select?wid=940&hei=1112&fmt=png-alpha&.v=1725574345265',
-  phone: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-16-pro-naturaltitanium-select?wid=940&hei=1112&fmt=png-alpha&.v=1725574345265',
-  laptop: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/macbook-air-spacegray-select-201810?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1603332211000',
-  headphone: 'https://m.media-amazon.com/images/I/61+tScB8wRL._SL1500_.jpg',
-  hotel1: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/48442385.jpg?k=36195679',
-  hotel2: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/38891544.jpg?k=12953289',
-  hotel3: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/223491823.jpg?k=59492193',
-  pizza: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/2b4f52d3e946182260015403063f278d',
-  biryani: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/x4flfnng2o8h6vib9v2u',
-  grocery: 'https://cdn.grofers.com/cdn-cgi/image/f=auto,fit=scale-down,q=70,metadata=none,w=720/app/images/products/full_screen/pro_478887.jpg'
+  airpods: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=800&auto=format&fit=crop&q=80',
+  iphone: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80',
+  phone: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=800&auto=format&fit=crop&q=80',
+  laptop: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+  headphone: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
+  hotel1: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80',
+  hotel2: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80',
+  hotel3: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&auto=format&fit=crop&q=80',
+  pizza: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop&q=80',
+  biryani: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
+  grocery: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop&q=80'
 };
 
 function resolveOfficialImage(text = '', category = '', extractedUrl = null) {

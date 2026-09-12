@@ -1,5 +1,19 @@
 [
   {
+    "id": "alt-088tvk",
+    "product": "AirPods Pro",
+    "targetPrice": 18000,
+    "currentBestPrice": 19490,
+    "notifyEmail": "user@example.com",
+    "status": "MONITORING",
+    "stores": [
+      "Amazon",
+      "Flipkart",
+      "Croma"
+    ],
+    "created": "2026-09-12T08:34:17.275Z"
+  },
+  {
     "id": "alt-b0udvw",
     "product": "AirPods Pro",
     "targetPrice": 18000,
