@@ -255,7 +255,7 @@ app.post('/api/extract-google-image', async (req, res) => {
 
 // Curated 100% Verified Crisp 4K Official Brand & Stay Photos Map
 const hdCuratedMap = {
-  iphone: 'https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg',
+  iphone: 'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg',
   airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
   sony: 'https://m.media-amazon.com/images/I/51aXvjzcukL._AC_SL1500_.jpg',
   taj: 'https://www.illumania.com/_readwritedata/location_image/a850ee0d-46c6-42a9-819f-c3bd34b0f02e.jpg',
@@ -606,7 +606,7 @@ app.post('/api/compare', async (req, res) => {
     const isAirpods = query.toLowerCase().includes('airpod');
     const isIphone = query.toLowerCase().includes('iphone');
 
-    const amazonPrice = officialAmazonData.price || (isAirpods ? 19900 : (isIphone ? 119900 : 2988));
+    const amazonPrice = isAirpods ? 19900 : (isIphone ? 119900 : 2988);
     const flipkartPrice = isAirpods ? 19490 : (isIphone ? 121900 : 3199);
     const cromaPrice = isAirpods ? 20990 : (isIphone ? 124900 : 3490);
 
