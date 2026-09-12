@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { exec } = require('child_process');
 const fs = require('fs');
@@ -21,6 +22,51 @@ if (!fs.existsSync(ALERTS_FILE)) {
       created: new Date().toISOString()
     }
   ], null, 2));
+}
+
+// Groq LLM AI Engine Helper Function
+function callGroqAi(promptText, customApiKey = null) {
+  const apiKey = customApiKey || process.env.GROQ_API_KEY;
+  return new Promise((resolve) => {
+    if (!apiKey) return resolve(null);
+
+    const postData = JSON.stringify({
+      model: 'openai/gpt-oss-20b',
+      messages: [{ role: 'user', content: promptText }]
+    });
+
+    const options = {
+      hostname: 'api.groq.com',
+      path: '/openai/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.choices && parsed.choices.length > 0) {
+            resolve(parsed.choices[0].message.content);
+          } else {
+            resolve(null);
+          }
+        } catch (e) {
+          resolve(null);
+        }
+      });
+    });
+
+    req.on('error', () => resolve(null));
+    req.write(postData);
+    req.end();
+  });
 }
 
 // Google Custom Search API Key & SerpAPI Hybrid Fetcher
