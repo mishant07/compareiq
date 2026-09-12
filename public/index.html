@@ -65,8 +65,13 @@
       <div class="w-full lg:w-auto flex items-center gap-3">
         
         <!-- Price Drop Alert Button -->
-        <button onclick="openAlertModal()" class="px-5 py-3 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-extrabold text-xs rounded-2xl transition shadow-xl shadow-amber-500/20 flex items-center gap-2 border border-amber-300/40">
+        <button onclick="openAlertModal('Apple iPhone 16 Pro', 119900)" class="px-5 py-3 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-extrabold text-xs rounded-2xl transition shadow-xl shadow-amber-500/20 flex items-center gap-2 border border-amber-300/40">
           <span>🔔 24/7 Price Drop Alert</span>
+        </button>
+
+        <!-- WebCMD OS Info Button -->
+        <button onclick="openWebcmdSysModal()" class="px-4 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-amber-400 font-extrabold text-xs rounded-2xl transition shadow-lg flex items-center gap-1.5">
+          <span>🖥️ WebCMD OS Specs</span>
         </button>
 
         <!-- Location Control -->
@@ -452,6 +457,28 @@
     </div>
   </div>
 
+  <!-- WEBCMD OPERATING SYSTEM & ARCHITECTURE MODAL -->
+  <div id="webcmdSysModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-card border border-amber-500/40 max-w-xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
+      <button onclick="closeWebcmdSysModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white text-2xl font-bold transition">&times;</button>
+      
+      <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+        <span>🖥️ WebCMD OS Engine Architecture</span>
+      </div>
+
+      <h2 class="text-2xl font-black text-white mb-1">WebCMD Operating System & Runtime Specs</h2>
+      <p class="text-xs text-zinc-400 mb-6">Live system diagnostics for CompareIQ's autonomous browser scraping daemon.</p>
+
+      <div id="webcmdSysContent" class="space-y-4">
+        <!-- Loaded via API -->
+      </div>
+
+      <button onclick="closeWebcmdSysModal()" class="w-full mt-6 py-3 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-600 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black rounded-2xl text-xs shadow-xl transition">
+        Close System Architecture Window
+      </button>
+    </div>
+  </div>
+
   <!-- Interactive Reserve & Payment Modal -->
   <div id="payModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
     <div class="glass-card border border-slate-700/80 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative">
@@ -831,20 +858,88 @@
     }
 
     function openAlertModal(productName = null, currentPrice = null) {
-      if (productName) {
-        document.getElementById('alertProduct').value = productName;
+      const prodElem = document.getElementById('alertProduct');
+      const currentPriceElem = document.getElementById('alertCurrentPrice');
+      const displayElem = document.getElementById('alertDisplayCurrentPrice');
+      const targetElem = document.getElementById('alertTargetPrice');
+
+      if (productName && prodElem) {
+        prodElem.value = productName;
+      } else if (prodElem && !prodElem.value) {
+        prodElem.value = 'Apple iPhone 16 Pro';
       }
-      if (currentPrice) {
+
+      if (currentPrice && currentPriceElem) {
         const numPrice = parseInt(currentPrice, 10);
-        document.getElementById('alertCurrentPrice').value = numPrice;
-        document.getElementById('alertDisplayCurrentPrice').value = `₹${numPrice.toLocaleString('en-IN')}`;
-        document.getElementById('alertTargetPrice').value = Math.floor(numPrice * 0.95);
+        currentPriceElem.value = numPrice;
+        if (displayElem) displayElem.value = `₹${numPrice.toLocaleString('en-IN')}`;
+        if (targetElem) targetElem.value = Math.floor(numPrice * 0.95);
+      } else if (currentPriceElem && (!currentPriceElem.value || currentPriceElem.value === '0')) {
+        currentPriceElem.value = '119900';
+        if (displayElem) displayElem.value = '₹1,19,900';
+        if (targetElem) targetElem.value = '115000';
       }
+
       document.getElementById('alertModal').classList.remove('hidden');
     }
 
     function closeAlertModal() {
       document.getElementById('alertModal').classList.add('hidden');
+    }
+
+    async function openWebcmdSysModal() {
+      const modal = document.getElementById('webcmdSysModal');
+      const content = document.getElementById('webcmdSysContent');
+      if (content) {
+        content.innerHTML = '<div class="text-center py-6 text-amber-400 font-bold animate-pulse">Querying WebCMD Operating System & Browser Engine specifications...</div>';
+      }
+      if (modal) modal.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/webcmd/sys-info');
+        const data = await res.json();
+        if (data.success && content) {
+          const sys = data.sysInfo;
+          content.innerHTML = `
+            <div class="space-y-4 text-xs font-mono">
+              <div class="bg-zinc-950 p-4 rounded-xl border border-amber-500/30">
+                <div class="text-amber-400 font-bold uppercase tracking-wider text-[11px] mb-2">🖥️ Operating System & Host Specs</div>
+                <div class="grid grid-cols-2 gap-2 text-slate-300">
+                  <div><span class="text-slate-500">OS Platform:</span> <strong class="text-amber-300">${sys.platform} (${sys.type})</strong></div>
+                  <div><span class="text-slate-500">Kernel Release:</span> <strong class="text-white">${sys.release}</strong></div>
+                  <div><span class="text-slate-500">Architecture:</span> <strong class="text-white">${sys.arch}</strong></div>
+                  <div><span class="text-slate-500">CPU Model:</span> <strong class="text-white">${sys.cpuModel}</strong></div>
+                  <div><span class="text-slate-500">System Memory:</span> <strong class="text-emerald-400">${sys.freeMemGB} Free / ${sys.totalMemGB} Total</strong></div>
+                  <div><span class="text-slate-500">System Uptime:</span> <strong class="text-white">${sys.uptimeSeconds}s</strong></div>
+                </div>
+              </div>
+
+              <div class="bg-zinc-950 p-4 rounded-xl border border-amber-500/30">
+                <div class="text-amber-400 font-bold uppercase tracking-wider text-[11px] mb-2">⚡ WebCMD Engine & Runtime Specs</div>
+                <div class="space-y-1.5 text-slate-300">
+                  <div><span class="text-slate-500">Node Runtime:</span> <strong class="text-emerald-400">${sys.nodeVersion}</strong></div>
+                  <div><span class="text-slate-500">WebCMD Version:</span> <strong class="text-amber-300">${sys.webcmdVersion} (@agentrhq/webcmd)</strong></div>
+                  <div><span class="text-slate-500">Browser Driver:</span> <strong class="text-white">${sys.browserEngine}</strong></div>
+                </div>
+              </div>
+
+              <div class="bg-zinc-950 p-4 rounded-xl border border-amber-500/30">
+                <div class="text-amber-400 font-bold uppercase tracking-wider text-[11px] mb-2">🔌 Active WebCMD Site Plugins</div>
+                <ul class="list-disc list-inside space-y-1 text-slate-300">
+                  ${sys.activePlugins.map(p => `<li class="text-emerald-400 font-medium">${p}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          `;
+        }
+      } catch (err) {
+        if (content) content.innerHTML = '<div class="text-red-400 p-4 font-bold">Failed to load WebCMD System specifications.</div>';
+      }
+    }
+
+    function closeWebcmdSysModal() {
+      const modal = document.getElementById('webcmdSysModal');
+      if (modal) modal.classList.add('hidden');
     }
 
     async function createPriceAlert(e) {

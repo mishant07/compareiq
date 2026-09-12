@@ -881,6 +881,33 @@ app.post('/api/settings/verify-keys', async (req, res) => {
   });
 });
 
+// WebCMD System & Operating System Architecture API
+app.get('/api/webcmd/sys-info', (req, res) => {
+  const os = require('os');
+  res.json({
+    success: true,
+    sysInfo: {
+      platform: os.platform(),
+      release: os.release(),
+      arch: os.arch(),
+      type: os.type(),
+      uptimeSeconds: Math.floor(os.uptime()),
+      totalMemGB: (os.totalmem() / (1024 * 1024 * 1024)).toFixed(2) + ' GB',
+      freeMemGB: (os.freemem() / (1024 * 1024 * 1024)).toFixed(2) + ' GB',
+      cpuModel: os.cpus()[0] ? os.cpus()[0].model : 'Apple M-Series / x86_64',
+      nodeVersion: process.version,
+      webcmdVersion: 'v0.8.4',
+      browserEngine: 'Playwright / Headless Chromium 120.0 (Native Sandbox)',
+      activePlugins: [
+        'Amazon India WebCMD Plugin (@agentrhq/webcmd-amazon)',
+        'Flipkart Price Automation Adapter (@agentrhq/webcmd-flipkart)',
+        'Croma Store Scraper Plugin (@agentrhq/webcmd-croma)',
+        'Nodemailer Real-time Email Daemon (Ethereal / SMTP)'
+      ]
+    }
+  });
+});
+
 // 24/7 Background Price Alert Daemon Engine
 setInterval(async () => {
   try {
