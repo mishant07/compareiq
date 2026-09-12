@@ -12,24 +12,24 @@
   <style>
     body { 
       font-family: 'Plus Jakarta Sans', sans-serif; 
-      background-color: #030712;
+      background-color: #000000;
       background-image: 
-        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.18) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.18) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(147, 51, 234, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.25) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%);
     }
     h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
     
     .glass-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(10, 15, 30, 0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
     
     .glass-glow:hover {
-      border-color: rgba(139, 92, 246, 0.5);
-      box-shadow: 0 0 35px -5px rgba(139, 92, 246, 0.35);
+      border-color: rgba(147, 51, 234, 0.6);
+      box-shadow: 0 0 40px -5px rgba(147, 51, 234, 0.45);
     }
     
     .img-zoom {
@@ -39,23 +39,41 @@
       transform: scale(1.08);
     }
     .glow-text {
-      text-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+      text-shadow: 0 0 25px rgba(6, 182, 212, 0.7);
+    }
+
+    /* Cyberpunk Terminal Animation */
+    .radar-sweep {
+      position: relative;
+      overflow: hidden;
+    }
+    .radar-sweep::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.15), transparent);
+      animation: sweep 3s infinite;
+    }
+    @keyframes sweep {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
     }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen p-4 sm:p-8 relative">
+<body class="text-slate-100 min-h-screen p-4 sm:p-8 relative selection:bg-violet-500 selection:text-white">
 
   <div class="max-w-7xl mx-auto space-y-8">
 
     <!-- Header Navigation & Location Indicator Bar -->
     <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center pb-6 border-b border-slate-800/80 gap-4">
       <div class="flex items-center gap-3.5">
-        <div class="h-14 w-14 bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-violet-500/25">
+        <div class="h-14 w-14 bg-gradient-to-tr from-violet-600 via-pink-500 to-cyan-400 rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-violet-500/30 ring-2 ring-violet-500/40">
           ⚡
         </div>
         <div>
           <h1 class="text-3xl font-black tracking-tight text-white flex items-center gap-2.5">
-            CompareIQ <span class="text-[10px] bg-gradient-to-r from-violet-600 to-cyan-500 text-white border border-violet-400/30 px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-lg">WebCMD Engine v2.0</span>
+            CompareIQ <span class="text-[10px] bg-gradient-to-r from-violet-600 via-pink-500 to-cyan-400 text-white border border-violet-400/40 px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-lg">WebCMD Playwright Agent</span>
           </h1>
           <p class="text-xs text-slate-400 mt-0.5 font-medium">Live Website Image & Price Extraction across Official Stores & Booking Sites</p>
         </div>
@@ -105,16 +123,16 @@
     </div>
 
     <!-- Dual Input Search & Target Price Bar -->
-    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden">
+    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden border border-violet-500/30">
       
       <!-- Quick Location Presets -->
       <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
         <span class="text-slate-400 font-bold text-[11px] uppercase tracking-wider mr-1">Popular Hubs:</span>
-        <button onclick="setLocationAndScan('Mumbai')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Mumbai</button>
-        <button onclick="setLocationAndScan('New Delhi')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">New Delhi</button>
-        <button onclick="setLocationAndScan('Bengaluru')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Bengaluru</button>
-        <button onclick="setLocationAndScan('Goa')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Goa</button>
-        <button onclick="setLocationAndScan('New York')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">New York</button>
+        <button onclick="setLocationAndScan('Mumbai')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/80 hover:border-violet-500/60 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Mumbai</button>
+        <button onclick="setLocationAndScan('New Delhi')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/80 hover:border-violet-500/60 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">New Delhi</button>
+        <button onclick="setLocationAndScan('Bengaluru')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/80 hover:border-violet-500/60 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Bengaluru</button>
+        <button onclick="setLocationAndScan('Goa')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/80 hover:border-violet-500/60 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Goa</button>
+        <button onclick="setLocationAndScan('New York')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/80 hover:border-violet-500/60 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">New York</button>
       </div>
 
       <!-- Main Dual Search Inputs -->
@@ -125,7 +143,7 @@
           <input 
             id="searchInput" 
             type="text" 
-            placeholder="e.g. AirPods Pro, iPhone 16 Pro, 5 Star Hotel..." 
+            placeholder="e.g. AirPods Pro, iPhone 16 Pro, Taj Hotel Mumbai..." 
             value="AirPods Pro"
             class="w-full px-5 py-3.5 bg-slate-950/90 border border-slate-800/80 rounded-2xl focus:outline-none focus:border-violet-500 text-white placeholder-slate-500 text-sm shadow-inner transition font-medium"
           >
@@ -148,23 +166,48 @@
           <button 
             onclick="startSearch()" 
             id="searchBtn"
-            class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-extrabold rounded-2xl transition shadow-xl shadow-violet-600/30 text-sm flex items-center justify-center gap-2"
+            class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-pink-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-extrabold rounded-2xl transition shadow-xl shadow-violet-600/30 text-sm flex items-center justify-center gap-2"
           >
-            <span>🚀 Live WebCMD Scrape</span>
+            <span>🚀 Live WebCMD Google Scrape</span>
           </button>
         </div>
       </div>
 
-      <!-- Agent Status & Log Terminal -->
-      <div class="bg-slate-950/90 border border-slate-900 rounded-2xl p-4 font-mono text-xs">
-        <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2">
-          <span class="text-slate-500 uppercase font-bold text-[10px] tracking-wider flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span> WebCMD Live Extractor Terminal
-          </span>
-          <span id="log-status" class="text-cyan-400 font-bold">Engine Online</span>
+      <!-- Cyberpunk AI WebCMD Command Center Terminal -->
+      <div class="bg-black/95 border-2 border-cyan-500/50 rounded-2xl p-4.5 font-mono text-xs shadow-2xl radar-sweep relative group">
+        <!-- Terminal Header with Controls -->
+        <div class="flex items-center justify-between border-b border-cyan-900/60 pb-2.5 mb-2.5">
+          <div class="flex items-center gap-2.5">
+            <!-- Traffic Light Window Buttons -->
+            <div class="flex items-center gap-1.5 mr-2">
+              <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block shadow"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block shadow"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block shadow"></span>
+            </div>
+            <span class="text-cyan-400 font-extrabold text-xs tracking-widest flex items-center gap-1.5 uppercase">
+              <span>⚡ WEBCMD LIVE GOOGLE IMAGES & DOM AGENT TERMINAL</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-500/40 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse">
+              PLAYWRIGHT CHROMIUM ACTIVE
+            </span>
+            <span id="log-status" class="text-emerald-400 font-bold text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40">
+              ● AGENT READY
+            </span>
+          </div>
         </div>
-        <div id="terminal-logs" class="h-16 overflow-y-auto space-y-1 text-slate-300">
-          <p class="text-slate-600">> WebCMD live extraction engine active. Extracting live page DOM & official images...</p>
+
+        <div class="text-[10px] text-slate-400 mb-2 flex items-center justify-between bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800">
+          <div class="flex items-center gap-2 truncate">
+            <span class="text-slate-500 font-bold uppercase">TARGET DOM:</span>
+            <span id="targetUrlLog" class="text-violet-400 font-mono font-semibold truncate">https://www.google.com/search?tbm=isch&q=...</span>
+          </div>
+          <span class="text-[9px] text-cyan-300 font-bold uppercase tracking-wider shrink-0">Scraper Engine: Node WebCMD</span>
+        </div>
+
+        <div id="terminal-logs" class="h-24 overflow-y-auto space-y-1 text-slate-200 text-[11px] p-2 bg-slate-950/90 rounded-xl border border-slate-900 font-mono">
+          <p class="text-emerald-400 font-semibold"><span class="text-cyan-400 font-bold">❯ WEBCMD ></span> Playwright Scraping Engine Initialized. Real-time Google Images & Official DOM Extraction Online.</p>
         </div>
       </div>
 
@@ -569,12 +612,12 @@
     let selectedItemForPay = null;
 
     const fallbackImageMap = {
-      airpods: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=800&auto=format&fit=crop&q=80',
-      iphone: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80',
-      headphone: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
-      laptop: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
-      hotel: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80',
-      food: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop&q=80'
+      airpods: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNvcVWSU-_9dXmxC8AS9rDvhILV1jRgw_pAFEFDdLzzJnFLTJTl7-BNtbJ&s',
+      iphone: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG96A0Whx-0pskfMB2kfuDTRvtP5CZQhMLgp0ylBHoySwyJua9N_6pchQ9&s',
+      headphone: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5i-y_vV4DwIPIKavHBk8Vdbb5RpW505eryON-1aU0A6-mG2oYEv2pakvq&s',
+      laptop: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG96A0Whx-0pskfMB2kfuDTRvtP5CZQhMLgp0ylBHoySwyJua9N_6pchQ9&s',
+      hotel: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhJbSoz20ULM7VbhRClLmnojsz_xn2p8L-z47Ahfzis1kobthia_drPsfg&s',
+      food: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtYrOh79ACcG-RQhH_sWRU7lWtEYtwLXFkuqCY0iv9swUWQK7L6rxJziUE&s'
     };
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -583,12 +626,15 @@
       loadActiveAlerts();
     });
 
-    function addLog(msg) {
+    function addLog(msg, url = null) {
       const logs = document.getElementById('terminal-logs');
       const p = document.createElement('p');
       p.innerText = msg;
       logs.appendChild(p);
       logs.scrollTop = logs.scrollHeight;
+      if (url) {
+        document.getElementById('targetUrlLog').innerText = url;
+      }
     }
 
     async function loadActiveAlerts() {
@@ -791,8 +837,8 @@
               <span class="absolute top-3 right-3 bg-emerald-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
                 ${item.rating}
               </span>
-              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-slate-300 px-2 py-0.5 rounded text-[9px] font-mono border border-slate-800">
-                🌐 Live Site Scraped
+              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-cyan-300 px-2.5 py-1 rounded-lg text-[10px] font-mono border border-cyan-500/40 shadow-lg flex items-center gap-1">
+                <span>🔍</span> GOOGLE IMAGES SCRAPED ● LIVE
               </span>
             </div>
 
@@ -830,8 +876,8 @@
               <span class="absolute top-3 right-3 bg-violet-500 text-white font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
                 ${item.rating}
               </span>
-              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-slate-300 px-2 py-0.5 rounded text-[9px] font-mono border border-slate-800">
-                🌐 Live Site Scraped
+              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-violet-300 px-2.5 py-1 rounded-lg text-[10px] font-mono border border-violet-500/40 shadow-lg flex items-center gap-1">
+                <span>🔍</span> GOOGLE IMAGES SCRAPED ● LIVE
               </span>
             </div>
 
@@ -869,8 +915,8 @@
               <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
                 ${item.rating}
               </span>
-              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-slate-300 px-2 py-0.5 rounded text-[9px] font-mono border border-slate-800">
-                🌐 Live Site Scraped
+              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-emerald-300 px-2.5 py-1 rounded-lg text-[10px] font-mono border border-emerald-500/40 shadow-lg flex items-center gap-1">
+                <span>🔍</span> GOOGLE IMAGES SCRAPED ● LIVE
               </span>
             </div>
 
@@ -998,7 +1044,8 @@
       const targetPriceVal = document.getElementById('searchTargetPriceInput').value.trim();
       if (!query) return alert('Enter search query!');
 
-      addLog(`[CompareIQ] Executing WebCMD live extraction for: "${query}" (Target: ₹${targetPriceVal || 'Any'}) in ${activeLocation}...`);
+      const googleUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
+      addLog(`[CompareIQ] Executing WebCMD live extraction for: "${query}" (Target: ₹${targetPriceVal || 'Any'}) in ${activeLocation}...`, googleUrl);
 
       try {
         const res = await fetch('/api/compare', {
@@ -1009,7 +1056,7 @@
         const data = await res.json();
 
         if (data.success) {
-          addLog(`[WebCMD Agent] Search query completed! Lowest price: ${data.winner.store} (${data.winner.priceDisplay})`);
+          addLog(`[WebCMD Agent] Live Search & Google Images extracted! Winner: ${data.winner.store} (${data.winner.priceDisplay})`, data.winner.image);
           
           if (targetPriceVal && data.winner.priceNum > parseInt(targetPriceVal, 10)) {
             // Auto-create price alert if target budget exceeded

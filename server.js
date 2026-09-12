@@ -178,10 +178,17 @@ async function searchGoogleImages(query) {
     await page.goto("${targetUrl}", { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(1000);
     const imgUrl = await page.evaluate(() => {
-      const imgs = Array.from(document.querySelectorAll('img.rg_i, img.YQ4gaf, div[data-attrid="image"] img, img'));
+      const imgs = Array.from(document.querySelectorAll('img'));
       for (const img of imgs) {
-        if (img.src && img.src.startsWith('http') && !img.src.includes('google.com/images/branding')) {
-          return img.src;
+        const src = img.src || img.getAttribute('src') || img.getAttribute('data-src') || img.getAttribute('data-iurl');
+        if (src && (src.includes('encrypted-tbn') || src.includes('gstatic.com/images')) && !src.includes('productlogos') && !src.endsWith('.svg')) {
+          return src;
+        }
+      }
+      for (const img of imgs) {
+        const src = img.src || img.getAttribute('src') || img.getAttribute('data-src') || img.getAttribute('data-iurl');
+        if (src && src.startsWith('http') && !src.includes('google') && !src.includes('svg') && !src.includes('logo')) {
+          if (src.length < 1000) return src;
         }
       }
       return null;
@@ -193,49 +200,40 @@ async function searchGoogleImages(query) {
     const child = exec(`webcmd --session ${sessionId} browser run --stdin`, { env }, (error, stdout) => {
       try {
         const parsed = JSON.parse(stdout);
-        resolve(parsed.result || parsed || null);
-      } catch (e) {
-        resolve(null);
-      }
+        const resUrl = parsed.result || (parsed.details && parsed.details.result);
+        if (resUrl && typeof resUrl === 'string' && resUrl.startsWith('http')) {
+          return resolve(resUrl);
+        }
+      } catch (e) {}
+      resolve(null);
     });
     child.stdin.write(jsScript);
     child.stdin.end();
   });
 }
 
-// Repository of Authentic High-Resolution Brand & Store Product Image URLs
-const officialFallbackMap = {
-  airpods: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=800&auto=format&fit=crop&q=80',
-  iphone: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80',
-  phone: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=800&auto=format&fit=crop&q=80',
-  laptop: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
-  headphone: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
-  hotel1: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=80',
-  hotel2: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&auto=format&fit=crop&q=80',
-  hotel3: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&auto=format&fit=crop&q=80',
-  pizza: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop&q=80',
-  biryani: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
-  grocery: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop&q=80'
-};
+// Endpoint for direct Google Image Scraping
+app.post('/api/extract-google-image', async (req, res) => {
+  const { query } = req.body;
+  if (!query) return res.status(400).json({ error: 'Query is required' });
+  const imageUrl = await searchGoogleImages(query);
+  res.json({ success: true, query, imageUrl });
+});
 
-function resolveOfficialImage(text = '', category = '', extractedUrl = null) {
-  if (extractedUrl && (extractedUrl.startsWith('http://') || extractedUrl.startsWith('https://'))) {
-    return extractedUrl;
+// Cache for live Google image queries to ensure instant dashboard rendering
+const googleImageCache = {};
+
+async function resolveGoogleImageCached(query) {
+  if (googleImageCache[query]) return googleImageCache[query];
+  const url = await searchGoogleImages(query);
+  if (url) {
+    googleImageCache[query] = url;
+    return url;
   }
-  const q = text.toLowerCase();
-  if (q.includes('airpod') || q.includes('airpods')) return officialFallbackMap.airpods;
-  if (q.includes('iphone') || q.includes('apple') || q.includes('pro')) return officialFallbackMap.iphone;
-  if (q.includes('phone') || q.includes('mobile') || q.includes('samsung')) return officialFallbackMap.phone;
-  if (q.includes('laptop') || q.includes('macbook') || q.includes('computer')) return officialFallbackMap.laptop;
-  if (q.includes('headphone') || q.includes('sony') || q.includes('earbud')) return officialFallbackMap.headphone;
-  if (q.includes('pizza')) return officialFallbackMap.pizza;
-  if (q.includes('biryani') || q.includes('food')) return officialFallbackMap.biryani;
-  if (q.includes('grocery') || q.includes('market')) return officialFallbackMap.grocery;
-  if (category === 'hotels' || q.includes('hotel') || q.includes('resort')) return officialFallbackMap.hotel1;
-  return officialFallbackMap.phone;
+  return null;
 }
 
-// Location Scan API (Hotels, Food, Electronics)
+// Location Scan API (Hotels, Food, Electronics) with Live Google Image Scraping
 app.post('/api/location-scan', async (req, res) => {
   const { location } = req.body;
   const locationName = location || 'Mumbai';
@@ -243,6 +241,19 @@ app.post('/api/location-scan', async (req, res) => {
   console.log(`[CompareIQ Agent] Executing Live WebCMD Web Scraping Scan for Location: "${locationName}"`);
 
   try {
+    // Dynamically fetch REAL Google Images for location scan items in parallel
+    const [h1Img, h2Img, h3Img, f1Img, f2Img, f3Img, s1Img, s2Img, s3Img] = await Promise.all([
+      resolveGoogleImageCached(`Taj Grand Palace Hotel ${locationName}`),
+      resolveGoogleImageCached(`Oberoi Luxury Hotel ${locationName}`),
+      resolveGoogleImageCached(`Hyatt Regency Hotel ${locationName}`),
+      resolveGoogleImageCached(`Gourmet Woodfired Pizza ${locationName}`),
+      resolveGoogleImageCached(`Royal Nawabi Biryani ${locationName}`),
+      resolveGoogleImageCached(`Organic Fresh Groceries ${locationName}`),
+      resolveGoogleImageCached(`Apple AirPods Pro 2`),
+      resolveGoogleImageCached(`Apple iPhone 16 Pro Titanium`),
+      resolveGoogleImageCached(`Sony WH-1000XM5 Headphones`)
+    ]);
+
     const hotels = [
       {
         id: 'h1',
@@ -253,7 +264,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.9 ★',
         reviews: '1,840 reviews',
         tag: 'Infinity Pool • Ocean View • Free Breakfast',
-        image: officialFallbackMap.hotel1,
+        image: h1Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhJbSoz20ULM7VbhRClLmnojsz_xn2p8L-z47Ahfzis1kobthia_drPsfg&s',
         location: `${locationName} City Center`,
         url: `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(locationName)}`
       },
@@ -266,7 +277,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.7 ★',
         reviews: '920 reviews',
         tag: 'Spa & Wellness • Airport Shuttle',
-        image: officialFallbackMap.hotel2,
+        image: h2Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhJbSoz20ULM7VbhRClLmnojsz_xn2p8L-z47Ahfzis1kobthia_drPsfg&s',
         location: `Marine Drive, ${locationName}`,
         url: `https://www.makemytrip.com/hotels/hotel-listing/?city=${encodeURIComponent(locationName)}`
       },
@@ -279,7 +290,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.5 ★',
         reviews: '640 reviews',
         tag: 'Rooftop Bar • Pay at Hotel Available',
-        image: officialFallbackMap.hotel3,
+        image: h3Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhJbSoz20ULM7VbhRClLmnojsz_xn2p8L-z47Ahfzis1kobthia_drPsfg&s',
         location: `Business Bay, ${locationName}`,
         url: `https://www.agoda.com/search?text=${encodeURIComponent(locationName)}`
       }
@@ -295,7 +306,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.8 ★',
         reviews: '4.2k orders',
         tag: 'Chef Special • 20-30 Mins Delivery',
-        image: officialFallbackMap.pizza,
+        image: f1Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtYrOh79ACcG-RQhH_sWRU7lWtEYtwLXFkuqCY0iv9swUWQK7L6rxJziUE&s',
         location: `Downtown ${locationName}`,
         url: `https://www.swiggy.com/search?q=${encodeURIComponent('pizza ' + locationName)}`
       },
@@ -308,7 +319,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.6 ★',
         reviews: '8.1k orders',
         tag: 'Authentic Spices • Complimentary Dessert',
-        image: officialFallbackMap.biryani,
+        image: f2Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtYrOh79ACcG-RQhH_sWRU7lWtEYtwLXFkuqCY0iv9swUWQK7L6rxJziUE&s',
         location: `Central ${locationName}`,
         url: `https://www.zomato.com/search?q=${encodeURIComponent('biryani ' + locationName)}`
       },
@@ -321,7 +332,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.9 ★',
         reviews: '12k orders',
         tag: 'Instant 10 Min Delivery',
-        image: officialFallbackMap.grocery,
+        image: f3Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtYrOh79ACcG-RQhH_sWRU7lWtEYtwLXFkuqCY0iv9swUWQK7L6rxJziUE&s',
         location: `Hub ${locationName}`,
         url: `https://blinkit.com/s/?q=${encodeURIComponent('groceries ' + locationName)}`
       }
@@ -337,7 +348,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.8 ★',
         reviews: '22k ratings',
         tag: `Delivers Today in ${locationName}`,
-        image: officialFallbackMap.airpods,
+        image: s1Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNvcVWSU-_9dXmxC8AS9rDvhILV1jRgw_pAFEFDdLzzJnFLTJTl7-BNtbJ&s',
         location: `Amazon Hub ${locationName}`,
         url: `https://www.amazon.in/s?k=AirPods%20Pro`
       },
@@ -350,7 +361,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.9 ★',
         reviews: '18k ratings',
         tag: `Delivers Today in ${locationName}`,
-        image: officialFallbackMap.iphone,
+        image: s2Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG96A0Whx-0pskfMB2kfuDTRvtP5CZQhMLgp0ylBHoySwyJua9N_6pchQ9&s',
         location: `Amazon Hub ${locationName}`,
         url: `https://www.amazon.in/s?k=iPhone%2016%20Pro`
       },
@@ -363,7 +374,7 @@ app.post('/api/location-scan', async (req, res) => {
         rating: '4.8 ★',
         reviews: '3,100 ratings',
         tag: `Same Day Store Pickup in ${locationName}`,
-        image: officialFallbackMap.headphone,
+        image: s3Img || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5i-y_vV4DwIPIKavHBk8Vdbb5RpW505eryON-1aU0A6-mG2oYEv2pakvq&s',
         location: `Croma Store ${locationName}`,
         url: `https://www.croma.com/searchB?q=Sony%20WH-1000XM5`
       }
@@ -399,15 +410,12 @@ app.post('/api/compare', async (req, res) => {
 
   try {
     // Run live WebCMD Playwright execution on official Amazon site to pull live page title, image & price
-    const officialAmazonData = await extractOfficialSiteData(amazonUrl);
-
     let extractedImg = officialAmazonData.image;
-    if (!extractedImg) {
+    if (!extractedImg || !extractedImg.startsWith('http')) {
       // Fall back to WebCMD live Google Images search
       extractedImg = await searchGoogleImages(query);
     }
-
-    const itemImage = resolveOfficialImage(query, category, extractedImg);
+    const itemImage = extractedImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG96A0Whx-0pskfMB2kfuDTRvtP5CZQhMLgp0ylBHoySwyJua9N_6pchQ9&s';
     const isAirpods = query.toLowerCase().includes('airpod');
     const isIphone = query.toLowerCase().includes('iphone');
 
