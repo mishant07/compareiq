@@ -480,20 +480,51 @@
             <p class="text-[10px] text-slate-500">Supports Google Pay, PhonePe, Paytm, BHIM & Cred UPI IDs.</p>
           </div>
 
-          <!-- Dynamic Field 2: Credit/Debit Card Input -->
+          <!-- Dynamic Field 2: Credit/Debit Card Input with Live BIN Brand Auto-Detection -->
           <div id="payFieldsCard" class="hidden space-y-3">
             <div>
-              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Card Number</label>
-              <input id="cardNumberInput" type="text" placeholder="4532 •••• •••• 8892" value="4532 8912 0019 8892" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-[11px] font-black text-zinc-400 uppercase tracking-wider block">Card Number</label>
+                <span class="text-[10px] text-amber-400 font-bold">Auto-Detects Visa, MC, Amex, RuPay</span>
+              </div>
+              <div class="relative">
+                <input 
+                  id="cardNumberInput" 
+                  type="text" 
+                  placeholder="4532 •••• •••• 8892" 
+                  value="4532 8912 0019 8892" 
+                  oninput="handleCardInput(this)" 
+                  maxlength="19"
+                  class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 font-mono pr-36"
+                >
+                <div id="cardBrandBadge" class="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1 bg-blue-900/60 text-blue-300 border border-blue-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider shadow">
+                  <span id="cardBrandName">💙 VISA</span>
+                </div>
+              </div>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
-                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Expiry (MM/YY)</label>
-                <input id="cardExpiryInput" type="text" placeholder="08/28" value="12/28" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+                <label class="text-[11px] font-black text-zinc-400 uppercase tracking-wider block mb-1">Expiry (MM/YY)</label>
+                <input 
+                  id="cardExpiryInput" 
+                  type="text" 
+                  placeholder="08/28" 
+                  value="12/28" 
+                  oninput="handleExpiryInput(this)"
+                  maxlength="5"
+                  class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 font-mono"
+                >
               </div>
               <div>
-                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">CVV</label>
-                <input id="cardCvvInput" type="password" placeholder="•••" value="882" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+                <label class="text-[11px] font-black text-zinc-400 uppercase tracking-wider block mb-1">CVV</label>
+                <input 
+                  id="cardCvvInput" 
+                  type="password" 
+                  placeholder="•••" 
+                  value="882" 
+                  maxlength="4"
+                  class="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500 font-mono"
+                >
               </div>
             </div>
           </div>
@@ -563,6 +594,70 @@
       hotel: 'https://wallpapers.com/images/hd/taj-mahal-palace-hotel-mumbai-cgb6r05wok0v1q6q.jpg',
       food: 'https://static.vecteezy.com/system/resources/previews/055/294/150/large_2x/gourmet-wood-fired-pizza-with-cherry-tomatoes-in-rustic-setting-photo.jpg'
     };
+
+    // Live Card Network BIN Auto-Detector Engine (Visa, Mastercard, Amex, RuPay, Discover, Diners Club, JCB)
+    function detectCardBrand(numberStr) {
+      const clean = numberStr.replace(/\D/g, '');
+      if (!clean) return { name: 'VISA', icon: '💙 VISA', color: 'bg-blue-900/60 text-blue-300 border-blue-500/40' };
+
+      // 1. Visa: Starts with 4
+      if (/^4/.test(clean)) {
+        return { name: 'VISA', icon: '💙 VISA', color: 'bg-blue-900/60 text-blue-300 border-blue-500/40' };
+      }
+      // 2. Mastercard: 51-55 or 2221-2720
+      if (/^(5[1-5]|2[2-7])/.test(clean)) {
+        return { name: 'MASTERCARD', icon: '🔴🟡 MC', color: 'bg-orange-900/60 text-amber-300 border-orange-500/40' };
+      }
+      // 3. American Express: 34 or 37
+      if (/^3[47]/.test(clean)) {
+        return { name: 'AMEX', icon: '💎 AMEX', color: 'bg-cyan-900/60 text-cyan-300 border-cyan-500/40' };
+      }
+      // 4. RuPay (India): 60, 65, 81, 82, 508, 353
+      if (/^(60|65|81|82|508|353)/.test(clean)) {
+        return { name: 'RUPAY', icon: '🇮🇳 RuPay', color: 'bg-emerald-900/60 text-emerald-300 border-emerald-500/40' };
+      }
+      // 5. Discover: 6011, 65, 644-649
+      if (/^(6011|65|64[4-9])/.test(clean)) {
+        return { name: 'DISCOVER', icon: '🧡 DISCOVER', color: 'bg-orange-950 text-orange-400 border-orange-600/40' };
+      }
+      // 6. Diners Club: 300-305, 36, 38
+      if (/^3(?:0[0-5]|[68])/.test(clean)) {
+        return { name: 'DINERS', icon: '🌐 DINERS', color: 'bg-indigo-900/60 text-indigo-300 border-indigo-500/40' };
+      }
+      // 7. JCB: 3528-3589
+      if (/^35/.test(clean)) {
+        return { name: 'JCB', icon: '🔴🟢 JCB', color: 'bg-red-900/60 text-red-300 border-red-500/40' };
+      }
+
+      return { name: 'CARD', icon: '💳 CARD', color: 'bg-zinc-800 text-zinc-300 border-zinc-700' };
+    }
+
+    function handleCardInput(elem) {
+      let val = elem.value.replace(/\D/g, '');
+      if (val.length > 16) val = val.slice(0, 16);
+
+      // Auto-format into groups of 4 digits (e.g. 4532 8912 0019 8892)
+      const formatted = val.replace(/(\d{4})/g, '$1 ').trim();
+      elem.value = formatted;
+
+      // Auto-detect brand from first 1-3 digits
+      const brand = detectCardBrand(val);
+      const badge = document.getElementById('cardBrandBadge');
+      if (badge) {
+        badge.className = `absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider shadow border ${brand.color}`;
+        document.getElementById('cardBrandName').innerText = brand.icon;
+      }
+    }
+
+    function handleExpiryInput(elem) {
+      let val = elem.value.replace(/\D/g, '');
+      if (val.length > 4) val = val.slice(0, 4);
+      if (val.length >= 2) {
+        elem.value = val.slice(0, 2) + '/' + val.slice(2);
+      } else {
+        elem.value = val;
+      }
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       scanLocation();
