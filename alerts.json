@@ -1,0 +1,39 @@
+[
+  {
+    "id": "alt-b0udvw",
+    "product": "AirPods Pro",
+    "targetPrice": 18000,
+    "currentBestPrice": 19490,
+    "notifyEmail": "user@example.com",
+    "status": "MONITORING",
+    "stores": [
+      "Amazon",
+      "Flipkart",
+      "Croma"
+    ],
+    "created": "2026-09-12T07:35:45.636Z"
+  },
+  {
+    "id": "alt-k8ubwl",
+    "product": "AirPods Pro (2nd Gen)",
+    "targetPrice": 18000,
+    "currentBestPrice": 19500,
+    "notifyEmail": "mishant@example.com",
+    "status": "MONITORING",
+    "stores": [
+      "Amazon",
+      "Flipkart",
+      "Croma"
+    ],
+    "created": "2026-09-12T07:29:18.500Z"
+  },
+  {
+    "id": "alt-101",
+    "product": "AirPods Pro (2nd Gen)",
+    "targetPrice": 18000,
+    "currentBestPrice": 19990,
+    "notifyEmail": "user@example.com",
+    "status": "MONITORING",
+    "created": "2026-09-12T07:29:09.184Z"
+  }
+]

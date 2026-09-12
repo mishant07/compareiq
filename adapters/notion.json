@@ -1,0 +1,34 @@
+{
+  "tiers": [
+    {
+      "name": "Free",
+      "price_mo": "$0",
+      "price_yr": "$0",
+      "features": [
+        "Collaborative workspace",
+        "Basic analytics",
+        "7-day page history"
+      ]
+    },
+    {
+      "name": "Plus",
+      "price_mo": "$12",
+      "price_yr": "$10",
+      "features": [
+        "Unlimited blocks for teams",
+        "30-day page history",
+        "Custom domains"
+      ]
+    },
+    {
+      "name": "Business",
+      "price_mo": "$18",
+      "price_yr": "$15",
+      "features": [
+        "SAML SSO & Enforced 2FA",
+        "Private teamspaces",
+        "90-day page history"
+      ]
+    }
+  ]
+}

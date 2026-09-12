@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>CompareIQ — Live WebCMD Intelligence Agent & Price Drop Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background-color: #030712;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.18) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+    }
+    h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
+    
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .glass-glow:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 35px -5px rgba(139, 92, 246, 0.35);
+    }
+    
+    .img-zoom {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover .img-zoom {
+      transform: scale(1.08);
+    }
+    .glow-text {
+      text-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen p-4 sm:p-8 relative">
+
+  <div class="max-w-7xl mx-auto space-y-8">
+
+    <!-- Header Navigation & Location Indicator Bar -->
+    <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center pb-6 border-b border-slate-800/80 gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="h-14 w-14 bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-violet-500/25">
+          ⚡
+        </div>
+        <div>
+          <h1 class="text-3xl font-black tracking-tight text-white flex items-center gap-2.5">
+            CompareIQ <span class="text-[10px] bg-gradient-to-r from-violet-600 to-cyan-500 text-white border border-violet-400/30 px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-lg">WebCMD Engine v2.0</span>
+          </h1>
+          <p class="text-xs text-slate-400 mt-0.5 font-medium">Live Website Image & Price Extraction across Official Stores & Booking Sites</p>
+        </div>
+      </div>
+
+      <!-- Location, USP, API Keys & Price Alert Buttons -->
+      <div class="w-full lg:w-auto flex flex-wrap items-center gap-2.5">
+        
+        <!-- API Keys Configuration Button -->
+        <button onclick="openApiKeyModal()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs rounded-2xl transition shadow-xl shadow-emerald-500/25 flex items-center gap-1.5 border border-emerald-400/40">
+          <span>🔑 API Keys Engine</span>
+        </button>
+
+        <!-- USP Pitch Deck Button -->
+        <button onclick="openUspModal()" class="px-4 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-black text-xs rounded-2xl transition shadow-xl shadow-violet-600/30 flex items-center gap-1.5 border border-violet-400/30">
+          <span>🏆 Winning USPs Explained</span>
+        </button>
+
+        <!-- Price Drop Alert Button -->
+        <button onclick="openAlertModal()" class="px-4 py-2.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-2xl transition shadow-xl shadow-orange-500/25 flex items-center gap-1.5">
+          <span>🔔 24/7 Price Drop Alert</span>
+        </button>
+
+        <!-- Location Control -->
+        <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800/80 p-2 rounded-2xl shadow-xl backdrop-blur-lg">
+          <div class="flex items-center gap-2 px-3 py-1 bg-slate-950/90 rounded-xl border border-slate-800">
+            <span id="locDot" class="text-emerald-400 animate-pulse text-xs">●</span>
+            <input 
+              id="locationInput" 
+              type="text" 
+              placeholder="Detecting city..." 
+              value="Mumbai"
+              class="bg-transparent text-xs font-bold text-white focus:outline-none w-28 sm:w-32"
+            >
+          </div>
+          <button onclick="autoDetectLocation()" title="Auto Detect Location" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-xl text-slate-200 font-bold transition">
+            📍 Detect
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Unique USPs Winning Banner -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-violet-500/30 hover:border-violet-400 transition cursor-pointer group">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">⚡</span>
+            <h4 class="text-xs font-black uppercase tracking-wider text-violet-400">Zero API Cost Engine</h4>
+          </div>
+          <span class="text-[10px] text-violet-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Runs live Playwright browser steps — bypasses expensive API paywalls completely.</p>
+      </div>
+
+      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-cyan-500/30 hover:border-cyan-400 transition cursor-pointer group">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🖼️</span>
+            <h4 class="text-xs font-black uppercase tracking-wider text-cyan-400">Live Official Site Images</h4>
+          </div>
+          <span class="text-[10px] text-cyan-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Extracts authentic images directly from Amazon, Flipkart, Booking.com & Croma DOM.</p>
+      </div>
+
+      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-emerald-500/30 hover:border-emerald-400 transition cursor-pointer group">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🎯</span>
+            <h4 class="text-xs font-black uppercase tracking-wider text-emerald-400">Dual Budget Engine</h4>
+          </div>
+          <span class="text-[10px] text-emerald-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Enter target price (e.g. AirPods @ ₹18k) — auto-triggers 24/7 background alerts!</p>
+      </div>
+
+      <div onclick="openUspModal()" class="glass-card p-4 rounded-2xl border border-amber-500/30 hover:border-amber-400 transition cursor-pointer group">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">📍</span>
+            <h4 class="text-xs font-black uppercase tracking-wider text-amber-400">Location Intelligence</h4>
+          </div>
+          <span class="text-[10px] text-amber-400 opacity-0 group-hover:opacity-100 transition">Info ➔</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Auto-detects GPS/IP to extract local deals for Hotels, Dining & Shopping.</p>
+      </div>
+    </div>
+
+    <!-- Active Price Drop Alerts Bar -->
+    <div id="activeAlertsBanner" class="hidden glass-card rounded-2xl p-4 border border-amber-500/40 bg-amber-500/10 shadow-xl">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🔔</span>
+          <div>
+            <h4 class="text-xs font-black uppercase tracking-wider text-amber-400">Active Price Drop Tracker</h4>
+            <p id="alertSummaryText" class="text-xs text-slate-200 font-medium">Monitoring AirPods Pro (2nd Gen) | Target: ₹18,000 | Current Lowest: ₹19,490 on Flipkart</p>
+          </div>
+        </div>
+        <span class="text-[10px] bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-amber-500/30 animate-pulse">
+          Monitoring 24/7
+        </span>
+      </div>
+    </div>
+
+    <!-- Dual Input Search & Target Price Bar -->
+    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden">
+      
+      <!-- Quick Location Presets -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <span class="text-slate-400 font-bold text-[11px] uppercase tracking-wider mr-1">Popular Hubs:</span>
+        <button onclick="setLocationAndScan('Mumbai')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Mumbai</button>
+        <button onclick="setLocationAndScan('New Delhi')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">New Delhi</button>
+        <button onclick="setLocationAndScan('Bengaluru')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Bengaluru</button>
+        <button onclick="setLocationAndScan('Goa')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">Goa</button>
+        <button onclick="setLocationAndScan('New York')" class="px-3.5 py-1.5 bg-slate-900/90 hover:bg-violet-950/60 hover:border-violet-500/50 text-slate-300 rounded-xl border border-slate-800 transition font-semibold">New York</button>
+      </div>
+
+      <!-- Main Dual Search Inputs -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+        <!-- Input 1: Product / Hotel Name -->
+        <div class="lg:col-span-6 relative">
+          <label class="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-1">Product / Hotel / Item Needed</label>
+          <input 
+            id="searchInput" 
+            type="text" 
+            placeholder="e.g. AirPods Pro, iPhone 16 Pro, 5 Star Hotel..." 
+            value="AirPods Pro"
+            class="w-full px-5 py-3.5 bg-slate-950/90 border border-slate-800/80 rounded-2xl focus:outline-none focus:border-violet-500 text-white placeholder-slate-500 text-sm shadow-inner transition font-medium"
+          >
+        </div>
+
+        <!-- Input 2: Target Price Target -->
+        <div class="lg:col-span-3 relative">
+          <label class="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-1">Target Budget Price (₹)</label>
+          <input 
+            id="searchTargetPriceInput" 
+            type="number" 
+            placeholder="e.g. 18000" 
+            value="18000"
+            class="w-full px-5 py-3.5 bg-slate-950/90 border border-slate-800/80 rounded-2xl focus:outline-none focus:border-cyan-500 text-cyan-400 font-bold placeholder-slate-500 text-sm shadow-inner transition"
+          >
+        </div>
+
+        <!-- Submit Button -->
+        <div class="lg:col-span-3 flex items-end">
+          <button 
+            onclick="startSearch()" 
+            id="searchBtn"
+            class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-extrabold rounded-2xl transition shadow-xl shadow-violet-600/30 text-sm flex items-center justify-center gap-2"
+          >
+            <span>🚀 Live WebCMD Scrape</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Agent Status & Log Terminal -->
+      <div class="bg-slate-950/90 border border-slate-900 rounded-2xl p-4 font-mono text-xs">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2">
+          <span class="text-slate-500 uppercase font-bold text-[10px] tracking-wider flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span> WebCMD Live Extractor Terminal
+          </span>
+          <span id="log-status" class="text-cyan-400 font-bold">Engine Online</span>
+        </div>
+        <div id="terminal-logs" class="h-16 overflow-y-auto space-y-1 text-slate-300">
+          <p class="text-slate-600">> WebCMD live extraction engine active. Extracting live page DOM & official images...</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Categorized Photo Cards Dashboard -->
+    <div id="locationDashboard" class="space-y-12">
+      
+      <!-- Section 1: Electronics & Tech Shopping -->
+      <section class="space-y-5">
+        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-violet-400 uppercase tracking-widest mb-1">
+              <span>🛒 Tech & Official Retail Stores</span>
+            </div>
+            <h2 class="text-3xl font-black text-white">Extracted Smartphone & Gadget Deals</h2>
+          </div>
+          <span class="text-xs text-slate-400 font-medium hidden sm:inline">Amazon • Flipkart • Croma</span>
+        </div>
+
+        <div id="shoppingGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Dynamic shopping cards -->
+        </div>
+      </section>
+
+      <!-- Section 2: Hotels & Accommodations -->
+      <section class="space-y-5">
+        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-cyan-400 uppercase tracking-widest mb-1">
+              <span>🏨 Stays & Accommodations</span>
+            </div>
+            <h2 class="text-3xl font-black text-white">Top Verified Hotels in <span id="hotelCityName" class="text-cyan-400 glow-text">Mumbai</span></h2>
+          </div>
+          <span class="text-xs text-slate-400 font-medium hidden sm:inline">WebCMD Extracted • Live Price Match</span>
+        </div>
+
+        <div id="hotelsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Dynamic hotel photo cards -->
+        </div>
+      </section>
+
+      <!-- Section 3: Food & Groceries -->
+      <section class="space-y-5">
+        <div class="flex justify-between items-end border-b border-slate-800/80 pb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-400 uppercase tracking-widest mb-1">
+              <span>🍕 Dining & Quick Groceries</span>
+            </div>
+            <h2 class="text-3xl font-black text-white">Popular Restaurants & Delivery</h2>
+          </div>
+          <span class="text-xs text-slate-400 font-medium hidden sm:inline">Swiggy • Zomato • Blinkit</span>
+        </div>
+
+        <div id="foodGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Dynamic food photo cards -->
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- API KEYS CONFIGURATION MODAL -->
+  <div id="apiKeyModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-card border border-emerald-500/50 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
+      <button onclick="closeApiKeyModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-2xl font-bold transition">&times;</button>
+      
+      <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+        <span>🔑 Hybrid Engine & API Keys</span>
+      </div>
+
+      <h2 class="text-2xl font-black text-white mb-1">API Key Configuration</h2>
+      <p class="text-xs text-slate-400 mb-6">CompareIQ runs automatically via WebCMD Playwright Scraper (Zero API Cost). Plug in custom API keys below for high-speed API execution!</p>
+
+      <form onsubmit="saveApiKeys(event)" class="space-y-4">
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Google Custom Search API Key (Optional)</label>
+          <input 
+            id="cfgGoogleKey" 
+            type="password" 
+            placeholder="AIzaSy..." 
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-emerald-500 font-mono"
+          >
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Google Search Engine ID / CX (Optional)</label>
+          <input 
+            id="cfgGoogleCx" 
+            type="text" 
+            placeholder="017578..." 
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-emerald-500 font-mono"
+          >
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">SerpAPI Key (Optional)</label>
+          <input 
+            id="cfgSerpKey" 
+            type="password" 
+            placeholder="secret_serp_..." 
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-emerald-500 font-mono"
+          >
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1">Groq / OpenAI API Key (Optional)</label>
+          <input 
+            id="cfgGroqKey" 
+            type="password" 
+            placeholder="gsk_..." 
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-emerald-500 font-mono"
+          >
+        </div>
+
+        <div id="keyStatusDisplay" class="p-3 bg-slate-950 border border-slate-800 rounded-xl text-[11px] font-mono text-slate-300 hidden">
+          <!-- Status output -->
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black rounded-2xl transition shadow-xl shadow-emerald-500/25 text-sm flex items-center justify-center gap-2 mt-4"
+        >
+          <span>💾 Save & Verify Hybrid Engine Settings</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- WINNING USPS PITCH DECK MODAL -->
+  <div id="uspModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="glass-card border border-violet-500/50 max-w-2xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
+      <button onclick="closeUspModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-2xl font-bold transition">&times;</button>
+      
+      <div class="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/30 text-violet-300 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+        <span>🏆 Pitch Deck & Competitive USPs</span>
+      </div>
+
+      <h2 class="text-3xl font-black text-white mb-2">Why CompareIQ Wins</h2>
+      <p class="text-xs text-slate-400 mb-6 leading-relaxed">Here are the 5 core Unique Selling Propositions (USPs) built into CompareIQ that set it apart from simple static apps:</p>
+
+      <div class="space-y-4 text-xs">
+        <!-- USP 1 -->
+        <div class="bg-slate-950/90 border border-violet-500/30 p-4 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-violet-400 text-sm flex items-center gap-2"><span>1. ⚡</span> Zero API Cost & Autonomous Scraper Engine</h4>
+            <span class="text-[10px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded font-bold">CORE TECH</span>
+          </div>
+          <p class="text-slate-300">Uses local <code class="text-cyan-400 font-mono">webcmd</code> Playwright headless Chromium instances to scrape real website DOMs live. No paid API subscriptions (SerpAPI, RapidAPI) required!</p>
+        </div>
+
+        <!-- USP 2 -->
+        <div class="bg-slate-950/90 border border-cyan-500/30 p-4 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-cyan-400 text-sm flex items-center gap-2"><span>2. 🖼️</span> Live Official Site Image & Data Extraction</h4>
+            <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-bold">VISUAL INTELLIGENCE</span>
+          </div>
+          <p class="text-slate-300">Scrapes authentic OpenGraph meta imagery and DOM product photos directly from Amazon, Flipkart, Booking.com, Swiggy & Croma official websites, verified with live site badges.</p>
+        </div>
+
+        <!-- USP 3 -->
+        <div class="bg-slate-950/90 border border-emerald-500/30 p-4 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-emerald-400 text-sm flex items-center gap-2"><span>3. 🎯</span> Dual Budget Target & Auto-Alert Engine</h4>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold">DEAL TRACKER</span>
+          </div>
+          <p class="text-slate-300">Enter what you need (e.g. AirPods Pro) and your target budget (e.g. ₹18,000). If live price exceeds budget, CompareIQ automatically spawns a 24/7 background monitor daemon.</p>
+        </div>
+
+        <!-- USP 4 -->
+        <div class="bg-slate-950/90 border border-amber-500/30 p-4 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-amber-400 text-sm flex items-center gap-2"><span>4. 📍</span> Hyper-Local GPS/IP Multi-Category Scanner</h4>
+            <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">GEOLOCATION</span>
+          </div>
+          <p class="text-slate-300">Automatically resolves user city & location via IP + Reverse Geocoding. Dynamically categorizes local deals for Hotels, Restaurants & Electronics in your vicinity.</p>
+        </div>
+
+        <!-- USP 5 -->
+        <div class="bg-slate-950/90 border border-slate-700/80 p-4 rounded-2xl space-y-1">
+          <div class="flex items-center justify-between">
+            <h4 class="font-black text-white text-sm flex items-center gap-2"><span>5. 💳</span> Instant Interactive Reservation & Payment Modal</h4>
+            <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-bold">ONE-CLICK ACTION</span>
+          </div>
+          <p class="text-slate-300">Allows instant booking and deal locking with simulated UPI, Cards, Apple Pay, or Pay at Venue, generating real booking reference receipts.</p>
+        </div>
+      </div>
+
+      <button onclick="closeUspModal()" class="w-full mt-6 py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-extrabold rounded-2xl text-xs shadow-xl transition">
+        Awesome, Close Window
+      </button>
+    </div>
+  </div>
+
+  <!-- PRICE DROP ALERT MODAL -->
+  <div id="alertModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
+    <div class="glass-card border border-amber-500/40 max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeAlertModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-2xl font-bold transition">&times;</button>
+      
+      <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+        <span>🔔 24/7 WebCMD Price Monitor</span>
+      </div>
+
+      <h2 class="text-2xl font-black text-white mb-1">Set Price Drop Alert</h2>
+      <p class="text-xs text-slate-400 mb-6">CompareIQ will automatically scan official sites and notify you when price hits target.</p>
+
+      <form onsubmit="createPriceAlert(event)" class="space-y-4">
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Product Name</label>
+          <input 
+            id="alertProduct" 
+            type="text" 
+            placeholder="e.g. AirPods Pro (2nd Gen)" 
+            value="AirPods Pro (2nd Gen)"
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Target Price (₹)</label>
+          <input 
+            id="alertTargetPrice" 
+            type="number" 
+            placeholder="e.g. 18000" 
+            value="18000"
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500"
+            required
+          >
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Notification Email / SMS</label>
+          <input 
+            id="alertEmail" 
+            type="email" 
+            placeholder="user@example.com" 
+            value="user@example.com"
+            class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-amber-500"
+            required
+          >
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-2xl transition shadow-xl shadow-orange-500/25 text-sm flex items-center justify-center gap-2 mt-4"
+        >
+          <span>🔔 Start Live Monitoring</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Reserve & Payment Modal -->
+  <div id="payModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4 z-50">
+    <div class="glass-card border border-slate-700/80 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closePayModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-2xl font-bold transition">&times;</button>
+      
+      <!-- Header Badge -->
+      <div id="payHeaderBadge" class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">
+        <span>🔒 Official Site Instant Checkout</span>
+      </div>
+
+      <!-- Item Preview Card -->
+      <div class="flex items-center gap-4 bg-slate-950/90 border border-slate-800 p-4 rounded-2xl mb-6 shadow-inner">
+        <img id="payItemImage" src="" class="h-20 w-24 object-cover rounded-xl border border-slate-800 shadow">
+        <div>
+          <span id="payItemProvider" class="text-[10px] bg-violet-500/20 text-violet-300 border border-violet-500/30 px-2 py-0.5 rounded font-black uppercase">PROVIDER</span>
+          <h3 id="payItemTitle" class="text-base font-black text-white mt-1 leading-tight">--</h3>
+          <p id="payItemLocation" class="text-xs text-slate-400 mt-0.5">--</p>
+        </div>
+      </div>
+
+      <!-- Target Budget Match Status Notice -->
+      <div id="targetBudgetNotice" class="hidden p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl mb-4 text-xs text-emerald-300 flex items-center gap-2">
+        <span>🎯</span>
+        <span id="targetBudgetNoticeText">Extracted deal price is within your specified target budget!</span>
+      </div>
+
+      <!-- Interactive Payment Form -->
+      <form id="payForm" onsubmit="executePayment(event)" class="space-y-4">
+        
+        <!-- Price Summary -->
+        <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800/80 space-y-2 text-xs">
+          <div class="flex justify-between text-slate-400">
+            <span>Official Extracted Base Price:</span>
+            <strong id="payBasePrice" class="text-slate-200">₹0</strong>
+          </div>
+          <div class="flex justify-between text-slate-400">
+            <span>Taxes & WebCMD Processing:</span>
+            <strong class="text-slate-200">₹180</strong>
+          </div>
+          <div class="flex justify-between text-slate-400 border-t border-slate-800 pt-2 text-sm">
+            <span class="font-bold text-white">Total Amount Due:</span>
+            <strong id="payTotalPrice" class="text-emerald-400 text-xl font-black">₹0</strong>
+          </div>
+        </div>
+
+        <!-- Payment Method Selector -->
+        <div>
+          <label class="text-xs font-black text-slate-300 uppercase tracking-wider block mb-2">Select Payment Method</label>
+          <div class="grid grid-cols-2 gap-2 mb-4">
+            <label onclick="switchPayTab('upi')" class="flex items-center gap-2 p-3 bg-slate-950 border border-violet-500/50 rounded-xl cursor-pointer hover:border-violet-400 transition">
+              <input type="radio" name="payMethod" value="UPI / PhonePe / GPay" checked class="text-violet-500">
+              <span class="text-xs font-bold text-white">📱 UPI / GPay</span>
+            </label>
+            <label onclick="switchPayTab('card')" class="flex items-center gap-2 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-violet-500 transition">
+              <input type="radio" name="payMethod" value="Credit/Debit Card" class="text-violet-500">
+              <span class="text-xs font-bold text-white">💳 Card</span>
+            </label>
+            <label onclick="switchPayTab('razorpay')" class="flex items-center gap-2 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-violet-500 transition">
+              <input type="radio" name="payMethod" value="Razorpay Live API" class="text-violet-500">
+              <span class="text-xs font-bold text-white">⚡ Razorpay API</span>
+            </label>
+            <label onclick="switchPayTab('venue')" class="flex items-center gap-2 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-violet-500 transition">
+              <input type="radio" name="payMethod" value="Pay at Venue / COD" class="text-violet-500">
+              <span class="text-xs font-bold text-white">🏢 Pay at Venue</span>
+            </label>
+          </div>
+
+          <!-- Dynamic Field 1: UPI Input -->
+          <div id="payFieldsUpi" class="space-y-2">
+            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Enter UPI Virtual Payment Address (VPA)</label>
+            <input id="upiIdInput" type="text" placeholder="e.g. mishant@okicici, 9876543210@ybl" value="mishant@okicici" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+            <p class="text-[10px] text-slate-500">Supports Google Pay, PhonePe, Paytm, BHIM & Cred UPI IDs.</p>
+          </div>
+
+          <!-- Dynamic Field 2: Credit/Debit Card Input -->
+          <div id="payFieldsCard" class="hidden space-y-3">
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Card Number</label>
+              <input id="cardNumberInput" type="text" placeholder="4532 •••• •••• 8892" value="4532 8912 0019 8892" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Expiry (MM/YY)</label>
+                <input id="cardExpiryInput" type="text" placeholder="08/28" value="12/28" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">CVV</label>
+                <input id="cardCvvInput" type="password" placeholder="•••" value="882" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-violet-500 font-mono">
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Field 3: Razorpay API Key Input -->
+          <div id="payFieldsRazorpay" class="hidden space-y-2">
+            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Razorpay Test Key ID (Optional)</label>
+            <input id="razorpayKeyInput" type="text" placeholder="rzp_test_..." class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-emerald-500 font-mono">
+            <p class="text-[10px] text-slate-500">Leave blank for simulated instant sandbox payment checkout.</p>
+          </div>
+
+          <!-- Dynamic Field 4: Pay at Venue -->
+          <div id="payFieldsVenue" class="hidden p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-400">
+            Pay directly in cash or card upon arrival at destination or delivery drop-off.
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          id="paySubmitBtn"
+          class="w-full py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black rounded-2xl transition shadow-xl shadow-emerald-500/25 text-sm flex items-center justify-center gap-2 mt-4"
+        >
+          <span>💳 Confirm & Pay Deal Now</span>
+        </button>
+
+      </form>
+
+      <!-- Confirmation Screen -->
+      <div id="paySuccessScreen" class="hidden text-center space-y-4 py-4">
+        <div class="h-16 w-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full flex items-center justify-center text-3xl mx-auto shadow-xl">
+          ✓
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-white">Booking Confirmed!</h3>
+          <p id="bookingMsg" class="text-xs text-slate-300 mt-1">Your reservation / order is locked in.</p>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-left text-xs space-y-2 font-mono">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Booking Reference:</span>
+            <strong id="bookingRefId" class="text-emerald-400 font-bold">BK-98124</strong>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Payment Status:</span>
+            <strong class="text-emerald-400 font-bold">CONFIRMED</strong>
+          </div>
+        </div>
+
+        <button onclick="closePayModal()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl transition">
+          Close Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let activeLocation = 'Mumbai';
+    let selectedItemForPay = null;
+
+    const fallbackImageMap = {
+      airpods: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MTJV3?wid=1144&hei=1144&fmt=jpeg&qlt=90&.v=1694014871985',
+      iphone: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-16-pro-naturaltitanium-select?wid=940&hei=1112&fmt=png-alpha&.v=1725574345265',
+      headphone: 'https://m.media-amazon.com/images/I/61+tScB8wRL._SL1500_.jpg',
+      laptop: 'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/macbook-air-spacegray-select-201810?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1603332211000',
+      hotel: 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/48442385.jpg?k=36195679',
+      food: 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/2b4f52d3e946182260015403063f278d'
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      autoDetectLocation();
+      loadActiveAlerts();
+    });
+
+    function addLog(msg) {
+      const logs = document.getElementById('terminal-logs');
+      const p = document.createElement('p');
+      p.innerText = msg;
+      logs.appendChild(p);
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function loadActiveAlerts() {
+      try {
+        const res = await fetch('/api/alerts');
+        const data = await res.json();
+        if (data.alerts && data.alerts.length > 0) {
+          const topAlert = data.alerts[0];
+          document.getElementById('alertSummaryText').innerText = `Monitoring ${topAlert.product} | Target: ₹${topAlert.targetPrice.toLocaleString('en-IN')} | Current Lowest: ₹${topAlert.currentBestPrice.toLocaleString('en-IN')}`;
+          document.getElementById('activeAlertsBanner').classList.remove('hidden');
+        }
+      } catch (e) {}
+    }
+
+    function openApiKeyModal() {
+      document.getElementById('cfgGoogleKey').value = localStorage.getItem('cfgGoogleKey') || '';
+      document.getElementById('cfgGoogleCx').value = localStorage.getItem('cfgGoogleCx') || '';
+      document.getElementById('cfgSerpKey').value = localStorage.getItem('cfgSerpKey') || '';
+      document.getElementById('cfgGroqKey').value = localStorage.getItem('cfgGroqKey') || '';
+      document.getElementById('apiKeyModal').classList.remove('hidden');
+    }
+
+    function closeApiKeyModal() {
+      document.getElementById('apiKeyModal').classList.add('hidden');
+    }
+
+    async function saveApiKeys(e) {
+      if (e) e.preventDefault();
+      const googleApiKey = document.getElementById('cfgGoogleKey').value.trim();
+      const googleCx = document.getElementById('cfgGoogleCx').value.trim();
+      const serpApiKey = document.getElementById('cfgSerpKey').value.trim();
+      const groqApiKey = document.getElementById('cfgGroqKey').value.trim();
+
+      localStorage.setItem('cfgGoogleKey', googleApiKey);
+      localStorage.setItem('cfgGoogleCx', googleCx);
+      localStorage.setItem('cfgSerpKey', serpApiKey);
+      localStorage.setItem('cfgGroqKey', groqApiKey);
+
+      try {
+        const res = await fetch('/api/settings/verify-keys', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ googleApiKey, googleCx, serpApiKey, groqApiKey })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const statusBox = document.getElementById('keyStatusDisplay');
+          statusBox.innerHTML = `
+            <p class="text-emerald-400 font-bold mb-1">${data.message}</p>
+            <p>• Google API: ${data.keyStatus.googleApi}</p>
+            <p>• SerpAPI: ${data.keyStatus.serpApi}</p>
+            <p>• Groq LLM: ${data.keyStatus.groqApi}</p>
+          `;
+          statusBox.classList.remove('hidden');
+          addLog('[CompareIQ Engine] Hybrid Mode Configured & API Keys Verified!');
+        }
+      } catch (err) {
+        alert('Failed to save API keys');
+      }
+    }
+
+    function openUspModal() {
+      document.getElementById('uspModal').classList.remove('hidden');
+    }
+
+    function closeUspModal() {
+      document.getElementById('uspModal').classList.add('hidden');
+    }
+
+    function openAlertModal() {
+      document.getElementById('alertModal').classList.remove('hidden');
+    }
+
+    function closeAlertModal() {
+      document.getElementById('alertModal').classList.add('hidden');
+    }
+
+    async function createPriceAlert(e) {
+      if (e) e.preventDefault();
+      const product = document.getElementById('alertProduct').value.trim();
+      const targetPrice = document.getElementById('alertTargetPrice').value.trim();
+      const notifyEmail = document.getElementById('alertEmail').value.trim();
+
+      try {
+        const res = await fetch('/api/alerts/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product, targetPrice, notifyEmail })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          closeAlertModal();
+          loadActiveAlerts();
+        }
+      } catch (err) {
+        alert('Failed to set alert.');
+      }
+    }
+
+    // Failsafe Multi-Strategy Location Engine
+    async function autoDetectLocation() {
+      const locInput = document.getElementById('locationInput');
+      const status = document.getElementById('log-status');
+      
+      status.innerText = 'Detecting Location...';
+      addLog('[Location Engine] Running IP & GPS Geocoding...');
+
+      try {
+        const ipRes = await fetch('https://ipapi.co/json/').catch(() => null);
+        if (ipRes && ipRes.ok) {
+          const ipData = await ipRes.json();
+          if (ipData.city) {
+            locInput.value = ipData.city;
+            addLog(`[Location Engine] Resolved Location: ${ipData.city}, ${ipData.country_name}`);
+            scanLocation();
+            return;
+          }
+        }
+
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+              try {
+                const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`);
+                const geoData = await geoRes.json();
+                const city = geoData.city || geoData.locality || 'Mumbai';
+                locInput.value = city;
+                addLog(`[Location Engine] Resolved GPS Location: ${city}`);
+                scanLocation();
+              } catch (e) {
+                locInput.value = 'Mumbai';
+                scanLocation();
+              }
+            },
+            () => {
+              locInput.value = 'Mumbai';
+              scanLocation();
+            }
+          );
+        } else {
+          locInput.value = 'Mumbai';
+          scanLocation();
+        }
+      } catch (err) {
+        locInput.value = 'Mumbai';
+        scanLocation();
+      }
+    }
+
+    function setLocationAndScan(city) {
+      document.getElementById('locationInput').value = city;
+      scanLocation();
+    }
+
+    async function scanLocation() {
+      const loc = document.getElementById('locationInput').value.trim() || 'Mumbai';
+      activeLocation = loc;
+
+      document.getElementById('hotelCityName').innerText = loc;
+      const status = document.getElementById('log-status');
+      status.innerText = `Scanning ${loc}...`;
+      status.className = 'text-cyan-400 font-bold animate-pulse';
+
+      addLog(`[CompareIQ] Initiating full WebCMD scan for "${loc}"`);
+      addLog(`[WebCMD Agent] Extracting live page elements & images in ${loc}...`);
+
+      try {
+        const res = await fetch('/api/location-scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ location: loc })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          renderDashboard(data);
+          addLog(`[WebCMD Agent] Scan complete for ${loc}. Extracted live verified photo cards.`);
+          status.innerText = 'Scan Complete';
+          status.className = 'text-emerald-400 font-bold';
+        }
+      } catch (err) {
+        addLog(`[Error] Failed to scan location: ${err.message}`);
+      }
+    }
+
+    function renderDashboard(data) {
+      const { hotels, food, shopping } = data.categories;
+
+      // Render Hotels Grid
+      const hotelsContainer = document.getElementById('hotelsGrid');
+      hotelsContainer.innerHTML = hotels.map(item => `
+        <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between">
+          <div>
+            <div class="relative h-52 overflow-hidden bg-slate-950">
+              <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.hotel}'" class="w-full h-full object-cover img-zoom">
+              <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur border border-slate-700 text-cyan-400 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                ${item.provider}
+              </span>
+              <span class="absolute top-3 right-3 bg-emerald-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                ${item.rating}
+              </span>
+              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-slate-300 px-2 py-0.5 rounded text-[9px] font-mono border border-slate-800">
+                🌐 Live Site Scraped
+              </span>
+            </div>
+
+            <div class="p-5 space-y-2">
+              <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+              <p class="text-xs text-slate-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+              <p class="text-[11px] text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                ${item.tag}
+              </p>
+            </div>
+          </div>
+
+          <div class="p-5 pt-0 flex justify-between items-center border-t border-slate-800/80 mt-2">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">Verified Rate</span>
+              <span class="text-xl font-black text-emerald-400">${item.priceDisplay}</span>
+            </div>
+            <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-violet-600/30 transition flex items-center gap-1.5">
+              <span>💳 Book & Pay</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Render Electronics Grid
+      const shoppingContainer = document.getElementById('shoppingGrid');
+      shoppingContainer.innerHTML = shopping.map(item => `
+        <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between">
+          <div>
+            <div class="relative h-52 overflow-hidden bg-slate-950">
+              <img src="${item.image}" alt="${item.name}" onerror="if('${item.name}'.toLowerCase().includes('iphone')) this.src='${fallbackImageMap.iphone}'; else if('${item.name}'.toLowerCase().includes('sony')) this.src='${fallbackImageMap.headphone}'; else this.src='${fallbackImageMap.airpods}';" class="w-full h-full object-cover img-zoom">
+              <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur border border-slate-700 text-violet-400 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                ${item.provider}
+              </span>
+              <span class="absolute top-3 right-3 bg-violet-500 text-white font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                ${item.rating}
+              </span>
+              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-slate-300 px-2 py-0.5 rounded text-[9px] font-mono border border-slate-800">
+                🌐 Live Site Scraped
+              </span>
+            </div>
+
+            <div class="p-5 space-y-2">
+              <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+              <p class="text-xs text-slate-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+              <p class="text-[11px] text-violet-300 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                ${item.tag}
+              </p>
+            </div>
+          </div>
+
+          <div class="p-5 pt-0 flex justify-between items-center border-t border-slate-800/80 mt-2">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">Extracted Deal</span>
+              <span class="text-xl font-black text-violet-400">${item.priceDisplay}</span>
+            </div>
+            <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-violet-600/30 transition flex items-center gap-1.5">
+              <span>💳 Buy Deal</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Render Food Grid
+      const foodContainer = document.getElementById('foodGrid');
+      foodContainer.innerHTML = food.map(item => `
+        <div class="glass-card rounded-3xl overflow-hidden shadow-xl glass-glow transition card-hover flex flex-col justify-between">
+          <div>
+            <div class="relative h-52 overflow-hidden bg-slate-950">
+              <img src="${item.image}" alt="${item.name}" onerror="this.src='${fallbackImageMap.food}'" class="w-full h-full object-cover img-zoom">
+              <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur border border-slate-700 text-emerald-400 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest shadow">
+                ${item.provider}
+              </span>
+              <span class="absolute top-3 right-3 bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg text-xs shadow">
+                ${item.rating}
+              </span>
+              <span class="absolute bottom-2 left-3 bg-slate-950/90 text-slate-300 px-2 py-0.5 rounded text-[9px] font-mono border border-slate-800">
+                🌐 Live Site Scraped
+              </span>
+            </div>
+
+            <div class="p-5 space-y-2">
+              <h3 class="font-black text-white text-lg leading-snug">${item.name}</h3>
+              <p class="text-xs text-slate-400 flex items-center gap-1 font-medium">📍 ${item.location}</p>
+              <p class="text-[11px] text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-semibold inline-block mt-1">
+                ${item.tag}
+              </p>
+            </div>
+          </div>
+
+          <div class="p-5 pt-0 flex justify-between items-center border-t border-slate-800/80 mt-2">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">Average Price</span>
+              <span class="text-xl font-black text-emerald-400">${item.priceDisplay}</span>
+            </div>
+            <button onclick="openPayModal('${item.name}', '${item.provider}', ${item.priceNum}, '${item.image}', '${item.location}')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5">
+              <span>🍕 Order Now</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Dynamic Payment Method Tab Switcher
+    function switchPayTab(tab) {
+      document.getElementById('payFieldsUpi').classList.add('hidden');
+      document.getElementById('payFieldsCard').classList.add('hidden');
+      document.getElementById('payFieldsRazorpay').classList.add('hidden');
+      document.getElementById('payFieldsVenue').classList.add('hidden');
+
+      if (tab === 'upi') document.getElementById('payFieldsUpi').classList.remove('hidden');
+      else if (tab === 'card') document.getElementById('payFieldsCard').classList.remove('hidden');
+      else if (tab === 'razorpay') document.getElementById('payFieldsRazorpay').classList.remove('hidden');
+      else if (tab === 'venue') document.getElementById('payFieldsVenue').classList.remove('hidden');
+    }
+
+    // Modal Payment Handlers
+    function openPayModal(title, provider, price, image, location, targetPriceVal = null) {
+      selectedItemForPay = { title, provider, price, image, location };
+
+      document.getElementById('payItemTitle').innerText = title;
+      document.getElementById('payItemProvider').innerText = provider;
+      document.getElementById('payItemLocation').innerText = location;
+      
+      const imgElem = document.getElementById('payItemImage');
+      imgElem.src = image;
+      imgElem.onerror = function() {
+        if (title.toLowerCase().includes('airpod')) this.src = fallbackImageMap.airpods;
+        else if (title.toLowerCase().includes('iphone')) this.src = fallbackImageMap.iphone;
+        else if (title.toLowerCase().includes('headphone')) this.src = fallbackImageMap.headphone;
+        else if (title.toLowerCase().includes('laptop')) this.src = fallbackImageMap.laptop;
+        else if (title.toLowerCase().includes('hotel') || title.toLowerCase().includes('stay')) this.src = fallbackImageMap.hotel;
+        else this.src = fallbackImageMap.food;
+      };
+
+      document.getElementById('payBasePrice').innerText = `₹${price.toLocaleString('en-IN')}`;
+      document.getElementById('payTotalPrice').innerText = `₹${(price + 180).toLocaleString('en-IN')}`;
+
+      const targetNotice = document.getElementById('targetBudgetNotice');
+      if (targetPriceVal && price <= parseInt(targetPriceVal, 10)) {
+        document.getElementById('targetBudgetNoticeText').innerText = `🎯 Extracted deal (₹${price.toLocaleString('en-IN')}) is within your budget target (₹${parseInt(targetPriceVal, 10).toLocaleString('en-IN')})!`;
+        targetNotice.classList.remove('hidden');
+      } else if (targetPriceVal) {
+        document.getElementById('targetBudgetNoticeText').innerText = `🔔 Current best (₹${price.toLocaleString('en-IN')}) is above target budget (₹${parseInt(targetPriceVal, 10).toLocaleString('en-IN')}). Auto-created 24/7 WebCMD price drop monitor!`;
+        targetNotice.classList.remove('hidden');
+      } else {
+        targetNotice.classList.add('hidden');
+      }
+
+      document.getElementById('payForm').classList.remove('hidden');
+      document.getElementById('paySuccessScreen').classList.add('hidden');
+      document.getElementById('payModal').classList.remove('hidden');
+    }
+
+    function closePayModal() {
+      document.getElementById('payModal').classList.add('hidden');
+    }
+
+    async function executePayment(event) {
+      event.preventDefault();
+      const btn = document.getElementById('paySubmitBtn');
+      btn.disabled = true;
+      btn.innerText = 'Processing Payment via Secure Gateway...';
+
+      const paymentMethod = document.querySelector('input[name="payMethod"]:checked').value;
+      const upiId = document.getElementById('upiIdInput').value.trim();
+      const cardNumber = document.getElementById('cardNumberInput').value.trim();
+      const razorpayKey = document.getElementById('razorpayKeyInput').value.trim();
+
+      try {
+        const res = await fetch('/api/pay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            itemName: selectedItemForPay.title,
+            price: selectedItemForPay.price + 180,
+            paymentMethod,
+            upiId: paymentMethod.includes('UPI') ? upiId : null,
+            cardMasked: paymentMethod.includes('Card') ? `•••• ${cardNumber.slice(-4)}` : null,
+            razorpayKey: razorpayKey || null,
+            location: activeLocation
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('payForm').classList.add('hidden');
+          document.getElementById('bookingRefId').innerText = data.bookingId;
+          document.getElementById('bookingMsg').innerText = data.message;
+          document.getElementById('paySuccessScreen').classList.remove('hidden');
+          addLog(`[CompareIQ Payment Engine] Payment SUCCESS! Booking Ref: ${data.bookingId} (${data.paymentMethod})`);
+        }
+      } catch (err) {
+        alert('Payment processing failed.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '💳 Confirm & Pay Deal Now';
+      }
+    }
+
+    async function startSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      const targetPriceVal = document.getElementById('searchTargetPriceInput').value.trim();
+      if (!query) return alert('Enter search query!');
+
+      addLog(`[CompareIQ] Executing WebCMD live extraction for: "${query}" (Target: ₹${targetPriceVal || 'Any'}) in ${activeLocation}...`);
+
+      try {
+        const res = await fetch('/api/compare', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, location: { city: activeLocation } })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          addLog(`[WebCMD Agent] Search query completed! Lowest price: ${data.winner.store} (${data.winner.priceDisplay})`);
+          
+          if (targetPriceVal && data.winner.priceNum > parseInt(targetPriceVal, 10)) {
+            // Auto-create price alert if target budget exceeded
+            fetch('/api/alerts/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ product: query, targetPrice: targetPriceVal, notifyEmail: 'user@example.com' })
+            }).then(() => loadActiveAlerts());
+          }
+
+          openPayModal(
+            `${data.query} (${data.winner.store})`, 
+            data.winner.store, 
+            data.winner.priceNum, 
+            data.winner.image, 
+            activeLocation,
+            targetPriceVal
+          );
+        }
+      } catch (e) {
+        addLog(`[Error] Search failed.`);
+      }
+    }
+  </script>
+</body>
+</html>
