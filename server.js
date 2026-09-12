@@ -255,7 +255,7 @@ app.post('/api/extract-google-image', async (req, res) => {
 
 // Curated 100% Verified Crisp 4K Official Brand & Stay Photos Map
 const hdCuratedMap = {
-  iphone: 'https://cdn.movertix.com/media/catalog/product/cache/image/1200x/i/p/iphone-16-pro-natural-titanium-256gb_1.jpg',
+  iphone: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=1200&auto=format&fit=crop&q=80',
   airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
   sony: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=1200&auto=format&fit=crop&q=80',
   taj: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&auto=format&fit=crop&q=80',
