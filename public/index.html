@@ -856,7 +856,7 @@
       const locInput = document.getElementById('locationInput');
       const status = document.getElementById('log-status');
       
-      status.innerText = 'Detecting Location...';
+      if (status) status.innerText = 'Detecting Location...';
       addLog('[Location Engine] Running IP & GPS Geocoding...');
 
       try {
@@ -864,7 +864,7 @@
         if (ipRes && ipRes.ok) {
           const ipData = await ipRes.json();
           if (ipData.city) {
-            locInput.value = ipData.city;
+            if (locInput) locInput.value = ipData.city;
             addLog(`[Location Engine] Resolved Location: ${ipData.city}, ${ipData.country_name}`);
             scanLocation();
             return;
@@ -878,42 +878,47 @@
                 const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`);
                 const geoData = await geoRes.json();
                 const city = geoData.city || geoData.locality || 'Mumbai';
-                locInput.value = city;
+                if (locInput) locInput.value = city;
                 addLog(`[Location Engine] Resolved GPS Location: ${city}`);
                 scanLocation();
               } catch (e) {
-                locInput.value = 'Mumbai';
+                if (locInput) locInput.value = 'Mumbai';
                 scanLocation();
               }
             },
             () => {
-              locInput.value = 'Mumbai';
+              if (locInput) locInput.value = 'Mumbai';
               scanLocation();
             }
           );
         } else {
-          locInput.value = 'Mumbai';
+          if (locInput) locInput.value = 'Mumbai';
           scanLocation();
         }
       } catch (err) {
-        locInput.value = 'Mumbai';
+        if (locInput) locInput.value = 'Mumbai';
         scanLocation();
       }
     }
 
     function setLocationAndScan(city) {
-      document.getElementById('locationInput').value = city;
+      const locInput = document.getElementById('locationInput');
+      if (locInput) locInput.value = city;
       scanLocation();
     }
 
     async function scanLocation() {
-      const loc = document.getElementById('locationInput').value.trim() || 'Mumbai';
+      const locInput = document.getElementById('locationInput');
+      const loc = (locInput && locInput.value ? locInput.value.trim() : '') || 'Mumbai';
       activeLocation = loc;
 
-      document.getElementById('hotelCityName').innerText = loc;
+      const hotelCity = document.getElementById('hotelCityName');
+      if (hotelCity) hotelCity.innerText = loc;
       const status = document.getElementById('log-status');
-      status.innerText = `Scanning ${loc}...`;
-      status.className = 'text-cyan-400 font-bold animate-pulse';
+      if (status) {
+        status.innerText = `Scanning ${loc}...`;
+        status.className = 'text-amber-400 font-bold animate-pulse';
+      }
 
       addLog(`[CompareIQ] Initiating full WebCMD scan for "${loc}"`);
       addLog(`[WebCMD Agent] Extracting live page elements & images in ${loc}...`);
@@ -929,8 +934,10 @@
         if (data.success) {
           renderDashboard(data);
           addLog(`[WebCMD Agent] Scan complete for ${loc}. Extracted live verified photo cards.`);
-          status.innerText = 'Scan Complete';
-          status.className = 'text-emerald-400 font-bold';
+          if (status) {
+            status.innerText = 'Scan Complete';
+            status.className = 'text-amber-400 font-bold';
+          }
         }
       } catch (err) {
         addLog(`[Error] Failed to scan location: ${err.message}`);
