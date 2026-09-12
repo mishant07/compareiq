@@ -93,6 +93,25 @@
       </div>
     </header>
 
+    <!-- ACTIVE PRICE ALERTS BANNER -->
+    <div id="activeAlertsBanner" class="hidden mb-6">
+      <div class="glass-card border border-amber-500/40 bg-zinc-950/90 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl backdrop-blur-xl">
+        <div class="flex items-center gap-3">
+          <span class="flex h-3 w-3 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+          </span>
+          <div class="text-xs">
+            <span class="font-extrabold text-amber-400 uppercase tracking-widest block text-[10px]">🔔 Active 24/7 WebCMD Price Monitor</span>
+            <span id="alertSummaryText" class="text-slate-200 font-medium">Monitoring active price drop targets...</span>
+          </div>
+        </div>
+        <button onclick="openAlertModal()" class="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold transition whitespace-nowrap">
+          Manage Alerts
+        </button>
+      </div>
+    </div>
+
     <!-- Dual Input Search & Target Price Bar -->
     <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5 relative overflow-hidden border border-amber-500/20">
       
