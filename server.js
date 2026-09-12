@@ -371,7 +371,10 @@ async function getEmailTransporter() {
     };
   }
   try {
-    const testAccount = await nodemailer.createTestAccount();
+    const testAccountPromise = nodemailer.createTestAccount();
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Ethereal Timeout')), 2500));
+    const testAccount = await Promise.race([testAccountPromise, timeoutPromise]);
+    
     return {
       transporter: nodemailer.createTransport({
         host: 'smtp.ethereal.email',
@@ -385,7 +388,7 @@ async function getEmailTransporter() {
       isTestAccount: true
     };
   } catch (err) {
-    console.error('[Nodemailer Ethereal Error]', err);
+    console.log('[Nodemailer Ethereal Info] Cloud SMTP fallback active:', err.message);
     return null;
   }
 }

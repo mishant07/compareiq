@@ -963,7 +963,8 @@
       if (e) e.preventDefault();
       const product = document.getElementById('alertProduct').value.trim();
       const targetPrice = document.getElementById('alertTargetPrice').value.trim();
-      const currentPrice = document.getElementById('alertCurrentPrice').value.trim();
+      const currentPriceElem = document.getElementById('alertCurrentPrice');
+      const currentPrice = currentPriceElem ? currentPriceElem.value.trim() : '119900';
       const notifyEmail = document.getElementById('alertEmail').value.trim();
 
       try {
@@ -974,22 +975,20 @@
         });
         const data = await res.json();
         if (data.success) {
-          // Trigger immediate evaluation & email dispatch alert
-          const emailRes = await fetch('/api/alerts/trigger-email', {
+          alert(`✅ ${data.message}`);
+          closeAlertModal();
+          loadActiveAlerts();
+
+          // Non-blocking background email notification trigger
+          fetch('/api/alerts/trigger-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ product, targetPrice, currentPrice, notifyEmail })
-          });
-          const emailData = await emailRes.json();
-
-          let msg = `✅ ${data.message}\n\n[Email Engine]: ${emailData.message}`;
-          if (emailData.previewUrl) {
-            msg += `\n\n[Opening Ethereal Live Email Link...]`;
-            window.open(emailData.previewUrl, '_blank');
-          }
-          alert(msg);
-          closeAlertModal();
-          loadActiveAlerts();
+          }).then(r => r.json()).then(emailData => {
+            if (emailData && emailData.previewUrl) {
+              try { window.open(emailData.previewUrl, '_blank'); } catch(e) {}
+            }
+          }).catch(() => {});
         }
       } catch (err) {
         alert('Failed to set price alert.');
