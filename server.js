@@ -257,13 +257,13 @@ app.post('/api/extract-google-image', async (req, res) => {
 const hdCuratedMap = {
   iphone: 'https://cdn.movertix.com/media/catalog/product/cache/image/1200x/i/p/iphone-16-pro-natural-titanium-256gb_1.jpg',
   airpods: 'https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111851_sp880-airpods-Pro-2nd-gen.png',
-  sony: 'https://d1ncau8tqf99kp.cloudfront.net/converted/111295_original_local_1200x1050_v3_converted.webp',
-  taj: 'https://wallpapers.com/images/hd/taj-mahal-palace-hotel-mumbai-cgb6r05wok0v1q6q.jpg',
-  oberoi: 'https://www.oberoihotels.com/-/media/oberoi-hotels/website-images/the-oberoi-mumbai/gallery/featured/mumbai-gallery-featured-1-exterior-724x407.jpg',
-  hyatt: 'https://media-cdn.tripadvisor.com/media/photo-s/14/0b/20/dc/hotel-facade.jpg',
-  pizza: 'https://static.vecteezy.com/system/resources/previews/055/294/150/large_2x/gourmet-wood-fired-pizza-with-cherry-tomatoes-in-rustic-setting-photo.jpg',
-  biryani: 'https://authenticroyal.com/wp-content/uploads/2024/10/royal-rice-may-220461.jpg',
-  grocery: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&auto=format&fit=crop&q=80',
+  sony: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=1200&auto=format&fit=crop&q=80',
+  taj: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&auto=format&fit=crop&q=80',
+  oberoi: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&auto=format&fit=crop&q=80',
+  hyatt: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&auto=format&fit=crop&q=80',
+  pizza: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop&q=80',
+  biryani: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1200&auto=format&fit=crop&q=80',
+  grocery: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&auto=format&fit=crop&q=80',
   jordan: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=1200&auto=format&fit=crop&q=80',
   zara: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=1200&auto=format&fit=crop&q=80',
   levis: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=1200&auto=format&fit=crop&q=80'
@@ -272,30 +272,30 @@ const hdCuratedMap = {
 const googleImageCache = {};
 
 async function resolveHDImage(query) {
+  const q = (query || '').toLowerCase();
+  
+  if (q.includes('iphone') || q.includes('apple') || q.includes('titanium')) return hdCuratedMap.iphone;
+  if (q.includes('airpod')) return hdCuratedMap.airpods;
+  if (q.includes('sony') || q.includes('headphone') || q.includes('xm5')) return hdCuratedMap.sony;
+  if (q.includes('taj')) return hdCuratedMap.taj;
+  if (q.includes('oberoi')) return hdCuratedMap.oberoi;
+  if (q.includes('hyatt') || q.includes('hotel') || q.includes('stay')) return hdCuratedMap.hyatt;
+  if (q.includes('pizza')) return hdCuratedMap.pizza;
+  if (q.includes('biryani') || q.includes('food') || q.includes('nawabi')) return hdCuratedMap.biryani;
+  if (q.includes('grocery') || q.includes('market') || q.includes('organic')) return hdCuratedMap.grocery;
+  if (q.includes('jordan') || q.includes('nike') || q.includes('shoe')) return hdCuratedMap.jordan;
+  if (q.includes('zara') || q.includes('shirt') || q.includes('linen')) return hdCuratedMap.zara;
+  if (q.includes('levi') || q.includes('denim') || q.includes('jacket')) return hdCuratedMap.levis;
+
   if (googleImageCache[query]) return googleImageCache[query];
 
   try {
-    // 1. Try live HD 1080p/4K web image extraction
     const hdUrl = await fetchHDWebImage(query);
     if (hdUrl && (hdUrl.startsWith('http://') || hdUrl.startsWith('https://'))) {
       googleImageCache[query] = hdUrl;
       return hdUrl;
     }
   } catch (e) {}
-
-  // 2. Curated crisp HD official match
-  const q = query.toLowerCase();
-  if (q.includes('iphone') || q.includes('apple') || q.includes('titanium')) return hdCuratedMap.iphone;
-  if (q.includes('airpod')) return hdCuratedMap.airpods;
-  if (q.includes('sony') || q.includes('headphone') || q.includes('xm5')) return hdCuratedMap.sony;
-  if (q.includes('taj')) return hdCuratedMap.taj;
-  if (q.includes('oberoi')) return hdCuratedMap.oberoi;
-  if (q.includes('hyatt') || q.includes('hotel')) return hdCuratedMap.hyatt;
-  if (q.includes('pizza')) return hdCuratedMap.pizza;
-  if (q.includes('biryani') || q.includes('food')) return hdCuratedMap.biryani;
-  if (q.includes('jordan') || q.includes('nike') || q.includes('shoe')) return hdCuratedMap.jordan;
-  if (q.includes('zara') || q.includes('shirt')) return hdCuratedMap.zara;
-  if (q.includes('levi') || q.includes('denim') || q.includes('jacket')) return hdCuratedMap.levis;
 
   return hdCuratedMap.iphone;
 }
