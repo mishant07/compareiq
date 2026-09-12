@@ -480,33 +480,31 @@ async function sendPriceDropEmail({ product, currentPrice, targetPrice, notifyEm
 
 // Real-Time Price Target Email Alert Notification Trigger
 app.post('/api/alerts/trigger-email', async (req, res) => {
-  const { product, targetPrice, currentPrice, notifyEmail, forceSend } = req.body;
+  const { product, targetPrice, currentPrice, notifyEmail } = req.body;
   const email = notifyEmail || 'user@example.com';
   const targetNum = parseInt(targetPrice, 10) || 18000;
   const currentNum = parseInt(currentPrice, 10) || 19490;
 
-  console.log(`[CompareIQ Alert Engine] Evaluating Email Alert for "${product}" to Email: ${email}`);
+  console.log(`[CompareIQ Alert Engine] Processing Email Alert Dispatch for "${product}" to Email: ${email}`);
 
-  if (currentNum <= targetNum || forceSend) {
-    console.log(`[CompareIQ Alert Engine] PRICE DROP MATCH! Current (₹${currentNum}) <= Target (₹${targetNum}). Sending Email to ${email}...`);
-    const emailResult = await sendPriceDropEmail({ product, currentPrice: currentNum, targetPrice: targetNum, notifyEmail: email });
+  const emailResult = await sendPriceDropEmail({ 
+    product, 
+    currentPrice: currentNum, 
+    targetPrice: targetNum, 
+    notifyEmail: email 
+  });
 
-    return res.json({
-      success: true,
-      emailSent: true,
-      status: 'DISPATCHED',
-      previewUrl: emailResult.previewUrl || null,
-      message: `📧 Direct Price Drop Email Notification dispatched to ${email}! Live price (₹${currentNum.toLocaleString('en-IN')}) meets your budget target (₹${targetNum.toLocaleString('en-IN')}).`
-    });
-  } else {
-    console.log(`[CompareIQ Alert Engine] 24/7 Monitoring active. Current (₹${currentNum}) > Target (₹${targetNum}).`);
-    return res.json({
-      success: true,
-      emailSent: false,
-      status: 'MONITORING',
-      message: `🔔 24/7 Monitor Active! Target budget set to ₹${targetNum.toLocaleString('en-IN')} (Current Best: ₹${currentNum.toLocaleString('en-IN')}). An instant email will automatically be sent to ${email} as soon as price drops!`
-    });
-  }
+  const isMatched = currentNum <= targetNum;
+
+  return res.json({
+    success: true,
+    emailSent: true,
+    status: isMatched ? 'DISPATCHED' : 'MONITORING',
+    previewUrl: emailResult.previewUrl || null,
+    message: isMatched
+      ? `📧 Direct Price Drop Email Notification dispatched to ${email}! Live price (₹${currentNum.toLocaleString('en-IN')}) meets your budget target (₹${targetNum.toLocaleString('en-IN')}).`
+      : `📧 24/7 Price Monitor Activated & Instant Confirmation Email sent to ${email}! Target set to ₹${targetNum.toLocaleString('en-IN')}. CompareIQ will auto-alert you when price drops.`
+  });
 });
 
 // Location Scan API (Hotels, Food, Electronics & Luxury Apparel)
