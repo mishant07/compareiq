@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const ALERTS_FILE = path.join(__dirname, 'alerts.json');
+const ALERTS_FILE = process.env.VERCEL ? path.join('/tmp', 'alerts.json') : path.join(__dirname, 'alerts.json');
 if (!fs.existsSync(ALERTS_FILE)) {
   fs.writeFileSync(ALERTS_FILE, JSON.stringify([
     {
@@ -923,4 +923,8 @@ setInterval(async () => {
 }, 30000);
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`[CompareIQ WebCMD Official Website Scraper] Active at http://localhost:${PORT}`));
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  app.listen(PORT, () => console.log(`[CompareIQ WebCMD Official Website Scraper] Active at http://localhost:${PORT}`));
+}
+
+module.exports = app;
