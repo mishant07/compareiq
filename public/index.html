@@ -1354,38 +1354,56 @@
     function openPayModal(title, provider, price, image, location, targetPriceVal = null) {
       selectedItemForPay = { title, provider, price, image, location };
 
-      document.getElementById('payItemTitle').innerText = title;
-      document.getElementById('payItemProvider').innerText = provider;
-      document.getElementById('payItemLocation').innerText = location;
-      
+      const titleElem = document.getElementById('payItemTitle');
+      const providerElem = document.getElementById('payItemProvider');
+      const locationElem = document.getElementById('payItemLocation');
+      const basePriceElem = document.getElementById('payBasePrice');
+      const totalPriceElem = document.getElementById('payTotalPrice');
       const imgElem = document.getElementById('payItemImage');
-      imgElem.src = image;
-      imgElem.onerror = function() {
-        if (title.toLowerCase().includes('airpod')) this.src = fallbackImageMap.airpods;
-        else if (title.toLowerCase().includes('iphone')) this.src = fallbackImageMap.iphone;
-        else if (title.toLowerCase().includes('headphone')) this.src = fallbackImageMap.headphone;
-        else if (title.toLowerCase().includes('laptop')) this.src = fallbackImageMap.laptop;
-        else if (title.toLowerCase().includes('hotel') || title.toLowerCase().includes('stay')) this.src = fallbackImageMap.hotel;
-        else this.src = fallbackImageMap.food;
-      };
 
-      document.getElementById('payBasePrice').innerText = `₹${price.toLocaleString('en-IN')}`;
-      document.getElementById('payTotalPrice').innerText = `₹${(price + 180).toLocaleString('en-IN')}`;
+      if (titleElem) titleElem.innerText = title || 'Item Purchase';
+      if (providerElem) providerElem.innerText = provider || 'Official Store';
+      if (locationElem) locationElem.innerText = location || activeLocation;
+      
+      const numPrice = typeof price === 'number' ? price : (parseInt(price, 10) || 119900);
 
-      const targetNotice = document.getElementById('targetBudgetNotice');
-      if (targetPriceVal && price <= parseInt(targetPriceVal, 10)) {
-        document.getElementById('targetBudgetNoticeText').innerText = `🎯 Extracted deal (₹${price.toLocaleString('en-IN')}) is within your budget target (₹${parseInt(targetPriceVal, 10).toLocaleString('en-IN')})!`;
-        targetNotice.classList.remove('hidden');
-      } else if (targetPriceVal) {
-        document.getElementById('targetBudgetNoticeText').innerText = `🔔 Current best (₹${price.toLocaleString('en-IN')}) is above target budget (₹${parseInt(targetPriceVal, 10).toLocaleString('en-IN')}). Auto-created 24/7 WebCMD price drop monitor!`;
-        targetNotice.classList.remove('hidden');
-      } else {
-        targetNotice.classList.add('hidden');
+      if (basePriceElem) basePriceElem.innerText = `₹${numPrice.toLocaleString('en-IN')}`;
+      if (totalPriceElem) totalPriceElem.innerText = `₹${(numPrice + 180).toLocaleString('en-IN')}`;
+
+      if (imgElem) {
+        imgElem.src = image || fallbackImageMap.iphone;
+        imgElem.onerror = function() {
+          const t = (title || '').toLowerCase();
+          if (t.includes('airpod')) this.src = fallbackImageMap.airpods;
+          else if (t.includes('iphone')) this.src = fallbackImageMap.iphone;
+          else if (t.includes('headphone') || t.includes('sony')) this.src = fallbackImageMap.headphone;
+          else if (t.includes('laptop')) this.src = fallbackImageMap.laptop;
+          else if (t.includes('hotel') || t.includes('stay')) this.src = fallbackImageMap.hotel;
+          else this.src = fallbackImageMap.food;
+        };
       }
 
-      document.getElementById('payForm').classList.remove('hidden');
-      document.getElementById('paySuccessScreen').classList.add('hidden');
-      document.getElementById('payModal').classList.remove('hidden');
+      const targetNotice = document.getElementById('targetBudgetNotice');
+      const targetNoticeText = document.getElementById('targetBudgetNoticeText');
+      if (targetNotice && targetNoticeText) {
+        if (targetPriceVal && numPrice <= parseInt(targetPriceVal, 10)) {
+          targetNoticeText.innerText = `🎯 Extracted deal (₹${numPrice.toLocaleString('en-IN')}) is within your budget target (₹${parseInt(targetPriceVal, 10).toLocaleString('en-IN')})!`;
+          targetNotice.classList.remove('hidden');
+        } else if (targetPriceVal) {
+          targetNoticeText.innerText = `🔔 Current best (₹${numPrice.toLocaleString('en-IN')}) is above target budget (₹${parseInt(targetPriceVal, 10).toLocaleString('en-IN')}). Auto-created 24/7 WebCMD price drop monitor!`;
+          targetNotice.classList.remove('hidden');
+        } else {
+          targetNotice.classList.add('hidden');
+        }
+      }
+
+      const formElem = document.getElementById('payForm');
+      const successScreen = document.getElementById('paySuccessScreen');
+      const modalElem = document.getElementById('payModal');
+
+      if (formElem) formElem.classList.remove('hidden');
+      if (successScreen) successScreen.classList.add('hidden');
+      if (modalElem) modalElem.classList.remove('hidden');
     }
 
     function closePayModal() {
